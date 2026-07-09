@@ -57,7 +57,7 @@
       {
         "provider": "github",
         "owner": "pjhun0412",
-        "repo": "Kafka-Tool",
+        "repo": "KafkaPilot",
         "releaseType": "release"
       }
     ],
