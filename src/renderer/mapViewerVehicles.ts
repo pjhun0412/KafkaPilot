@@ -1,5 +1,6 @@
 import L from "leaflet";
 import type { LiveMapPoint } from "../shared/types";
+import type { MapOutlierAlert } from "./mapOutliers";
 
 export type TrackingMode = "selected" | "fit" | "free";
 
@@ -8,6 +9,9 @@ export type VehicleState = {
   marker: L.Marker;
   trail: L.LatLngTuple[];
   polyline: L.Polyline;
+  alertSegments: L.Polyline[];
+  alerts: MapOutlierAlert[];
+  alertCount: number;
   animation?: number;
   lastHeading?: number;
   lastPointAt?: number;
@@ -30,17 +34,18 @@ export function markerColor(id: string) {
   return palette[hash % palette.length];
 }
 
-export function createVehicleIcon(point: LiveMapPoint, selected: boolean) {
+export function createVehicleIcon(point: LiveMapPoint, selected: boolean, alerted = false) {
   const color = markerColor(point.id);
   const heading = Number.isFinite(point.heading) ? Number(point.heading) : 0;
   const headingClass = Number.isFinite(point.heading) ? "has-heading" : "";
   const selectedClass = selected ? "selected" : "";
+  const alertClass = alerted ? "alerted" : "";
   return L.divIcon({
     className: "vehicle-marker-icon",
     iconSize: [1, 1],
     iconAnchor: [0, 0],
     html: `
-      <div class="vehicle-marker ${headingClass} ${selectedClass}" style="--marker-color:${color}; --heading:${heading}deg">
+      <div class="vehicle-marker ${headingClass} ${selectedClass} ${alertClass}" style="--marker-color:${color}; --heading:${heading}deg">
         <div class="vehicle-marker-body">
           <svg class="vehicle-marker-svg" viewBox="0 0 48 88" aria-hidden="true">
             <path class="vehicle-body-shape" d="M24 2c-9.3 0-15.8 5.7-17.1 15L3.3 43.6c-.4 3-.4 6.1 0 9.1L6.9 71C8.2 80.3 14.7 86 24 86s15.8-5.7 17.1-15l3.6-18.3c.6-3 .6-6.1 0-9.1L41.1 17C39.8 7.7 33.3 2 24 2Z" />
