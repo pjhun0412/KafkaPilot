@@ -1,7 +1,7 @@
 ﻿import type { DragPayload, SplitPaneState, TopicConsumeState, WorkspaceActionTarget, WorkspacePaneId } from "./uiTypes";
 
 export type ConsumeStatesByServer = Record<string, Record<string, TopicConsumeState>>;
-export const workspaceDragPayloadType = "application/x-kafka-tool";
+export const workspaceDragPayloadType = "application/x-kafkapilot";
 
 export function addTopicTab(tabs: string[], topic: string) {
   return tabs.includes(topic) ? tabs : [...tabs, topic];

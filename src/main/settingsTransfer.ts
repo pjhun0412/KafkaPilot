@@ -81,10 +81,10 @@ export function createSettingsTransferActions(options: {
     if (!window) return null;
     const includeSecrets = Boolean(exportOptions.includeSecrets);
     const result = await dialog.showSaveDialog(window, {
-      title: includeSecrets ? "Export encrypted Kafka Tool settings" : "Export Kafka Tool settings",
+      title: includeSecrets ? "Export encrypted KafkaPilot settings" : "Export KafkaPilot settings",
       defaultPath: includeSecrets
-        ? `kafka-tool-settings-with-secrets-${new Date().toISOString().slice(0, 10)}.json`
-        : `kafka-tool-settings-${new Date().toISOString().slice(0, 10)}.json`,
+        ? `kafkapilot-settings-with-secrets-${new Date().toISOString().slice(0, 10)}.json`
+        : `kafkapilot-settings-${new Date().toISOString().slice(0, 10)}.json`,
       filters: [{ name: "JSON", extensions: ["json"] }]
     });
     if (result.canceled || !result.filePath) {
@@ -107,7 +107,7 @@ export function createSettingsTransferActions(options: {
     const window = options.getWindow();
     if (!window) return null;
     const result = await dialog.showOpenDialog(window, {
-      title: "Import Kafka Tool settings",
+      title: "Import KafkaPilot settings",
       properties: ["openFile"],
       filters: [{ name: "JSON", extensions: ["json"] }]
     });

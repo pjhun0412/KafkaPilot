@@ -1,8 +1,8 @@
 {
-  "name": "kafka-tool",
+  "name": "kafkapilot",
   "version": "2.0.6",
-  "description": "Kafka Tool",
-  "author": "Kafka Tool",
+  "description": "KafkaPilot",
+  "author": "PJHUN",
   "private": true,
   "main": "dist/main/main.js",
   "scripts": {
@@ -47,12 +47,12 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "local.kafka-tool",
-    "productName": "Kafka Tool",
+    "appId": "local.kafkapilot",
+    "productName": "KafkaPilot",
     "directories": {
       "output": "out"
     },
-    "artifactName": "Kafka-Tool-Setup-${version}.${ext}",
+    "artifactName": "KafkaPilot-Setup-${version}.${ext}",
     "publish": [
       {
         "provider": "github",
@@ -69,7 +69,7 @@
     "win": {
       "target": "nsis",
       "icon": "build/icon.ico",
-      "executableName": "KafkaTool",
+      "executableName": "KafkaPilot",
       "signAndEditExecutable": true
     }
   }

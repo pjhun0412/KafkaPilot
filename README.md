@@ -1,6 +1,6 @@
 <div align="center">
 
-# Kafka Tool
+# KafkaPilot
 
 **A local desktop client for Apache Kafka that goes beyond topic browsing.**
 
@@ -16,7 +16,7 @@ Consume · Replay · Produce · Map Viewer · Consumer Group Management
 
 ---
 
-Most Kafka UIs let you browse topics and read messages. Kafka Tool adds the workflows that come next: **replaying messages to another cluster**, **resetting consumer group offsets safely**, and **visualizing live coordinate streams on a map** — all from one app that runs locally with no server to deploy.
+Most Kafka UIs let you browse topics and read messages. KafkaPilot adds the workflows that come next: **replaying messages to another cluster**, **resetting consumer group offsets safely**, and **visualizing live coordinate streams on a map** — all from one app that runs locally with no server to deploy.
 
 ---
 
@@ -79,7 +79,7 @@ Built for smart-city, BIS, C-ITS, and autonomous-driving Kafka pipelines where i
 
 ## Produce
 
-Single-message publishing and **Interval Produce** with Count or Duration limits. No unlimited mode — Kafka Tool shows a confirmation summary before any interval job starts.
+Single-message publishing and **Interval Produce** with Count or Duration limits. No unlimited mode — KafkaPilot shows a confirmation summary before any interval job starts.
 
 Dynamic fields work in Key, Headers, and Value:
 

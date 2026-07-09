@@ -110,7 +110,7 @@ export function SettingsTransferDialog({
       >
         <div className="modal-title">
           <div>
-            <span className="eyebrow">Kafka Tool</span>
+            <span className="eyebrow">KafkaPilot</span>
             <h2 id="settings-transfer-title">{title}</h2>
           </div>
           <button className="modal-close" onClick={onClose} title={labels.close}>

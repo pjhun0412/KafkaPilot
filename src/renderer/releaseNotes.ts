@@ -13,7 +13,7 @@ export type ReleaseNote = {
 export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
   "2.0.6": {
     ko: {
-      title: "Kafka Tool 2.0.6",
+      title: "KafkaPilot 2.0.6",
       sections: [
         {
           heading: "Consume Value Columns",
@@ -63,7 +63,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
       ]
     },
     en: {
-      title: "Kafka Tool 2.0.6",
+      title: "KafkaPilot 2.0.6",
       sections: [
         {
           heading: "Consume Value Columns",
@@ -115,7 +115,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
   },
   "2.0.4": {
     ko: {
-      title: "Kafka Tool 2.0.4",
+      title: "KafkaPilot 2.0.4",
       sections: [
         {
           heading: "서버 연결 테스트",
@@ -134,7 +134,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
       ]
     },
     en: {
-      title: "Kafka Tool 2.0.4",
+      title: "KafkaPilot 2.0.4",
       sections: [
         {
           heading: "Server connection test",
@@ -155,7 +155,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
   },
   "2.0.3": {
     ko: {
-      title: "Kafka Tool 2.0.3",
+      title: "KafkaPilot 2.0.3",
       sections: [
         {
           heading: "스마트 자동 발행 (Interval Produce)",
@@ -183,7 +183,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
       ]
     },
     en: {
-      title: "Kafka Tool 2.0.3",
+      title: "KafkaPilot 2.0.3",
       sections: [
         {
           heading: "Smart automatic publishing (Interval Produce)",
@@ -213,7 +213,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
   },
   "2.0.2": {
     ko: {
-      title: "Kafka Tool 2.0.2",
+      title: "KafkaPilot 2.0.2",
       sections: [
         {
           items: [
@@ -225,7 +225,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
       ]
     },
     en: {
-      title: "Kafka Tool 2.0.2",
+      title: "KafkaPilot 2.0.2",
       sections: [
         {
           items: [
@@ -239,7 +239,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
   },
   "2.0.1": {
     ko: {
-      title: "Kafka Tool 2.0.1",
+      title: "KafkaPilot 2.0.1",
       sections: [
         {
           items: [
@@ -251,7 +251,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
       ]
     },
     en: {
-      title: "Kafka Tool 2.0.1",
+      title: "KafkaPilot 2.0.1",
       sections: [
         {
           items: [
@@ -265,7 +265,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
   },
   "2.0.0": {
     ko: {
-      title: "Kafka Tool 2.0.0",
+      title: "KafkaPilot 2.0.0",
       sections: [
         {
           items: [
@@ -279,7 +279,7 @@ export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
       ]
     },
     en: {
-      title: "Kafka Tool 2.0.0",
+      title: "KafkaPilot 2.0.0",
       sections: [
         {
           items: [

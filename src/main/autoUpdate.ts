@@ -58,7 +58,7 @@ export function configureAutoUpdater({ getWindow, sendStatus }: AutoUpdateParams
       defaultId: 0,
       cancelId: 1,
       title: "Update ready",
-      message: `Kafka Tool ${info.version} is ready to install.`,
+      message: `KafkaPilot ${info.version} is ready to install.`,
       detail: "Restart now to apply the update."
     }).then((result) => {
       if (result.response === 0) {

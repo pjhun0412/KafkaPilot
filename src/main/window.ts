@@ -21,7 +21,7 @@ export async function createMainWindow(options: {
     y: windowBounds?.y,
     minWidth: 1100,
     minHeight: 720,
-    title: "Kafka Tool",
+    title: "KafkaPilot",
     icon: appIconPath(),
     autoHideMenuBar: false,
     webPreferences: {

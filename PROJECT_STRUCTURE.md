@@ -1,10 +1,10 @@
-﻿# Kafka Tool 프로젝트 구조
+﻿# KafkaPilot 프로젝트 구조
 
-이 문서는 Kafka Tool의 현재 소스 구조와 주요 책임을 빠르게 파악하기 위한 개발 문서입니다.
+이 문서는 KafkaPilot의 현재 소스 구조와 주요 책임을 빠르게 파악하기 위한 개발 문서입니다.
 
 ## 개요
 
-Kafka Tool은 Electron, React, TypeScript, KafkaJS 기반의 Apache Kafka 데스크톱 클라이언트입니다.
+KafkaPilot은 Electron, React, TypeScript, KafkaJS 기반의 Apache Kafka 데스크톱 클라이언트입니다.
 
 주요 목적은 여러 Kafka 클러스터를 등록하고, Broker/Topic/Consumer Group을 조회하며, 메시지 Consume/Produce/Export, Topic 설정, Avro Schema, 좌표 데이터 Map Viewer를 한 앱에서 처리하는 것입니다.
 

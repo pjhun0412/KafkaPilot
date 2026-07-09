@@ -19,7 +19,7 @@ function logsDirectory() {
 
 function logFilePath() {
   const day = new Date().toISOString().slice(0, 10);
-  return path.join(logsDirectory(), `kafka-tool-${day}.log`);
+  return path.join(logsDirectory(), `kafkapilot-${day}.log`);
 }
 
 function redact(value: string) {
@@ -81,9 +81,9 @@ export async function pruneOldLogs(retentionDays = LOG_RETENTION_DAYS) {
     await mkdir(logsDirectory(), { recursive: true });
     const entries = await readdir(logsDirectory(), { withFileTypes: true });
     await Promise.all(entries
-      .filter((entry) => entry.isFile() && /^kafka-tool-\d{4}-\d{2}-\d{2}\.log$/.test(entry.name))
+      .filter((entry) => entry.isFile() && /^kafkapilot-\d{4}-\d{2}-\d{2}\.log$/.test(entry.name))
       .map(async (entry) => {
-        const day = entry.name.slice("kafka-tool-".length, "kafka-tool-YYYY-MM-DD".length);
+        const day = entry.name.slice("kafkapilot-".length, "kafkapilot-YYYY-MM-DD".length);
         const time = Date.parse(`${day}T00:00:00.000Z`);
         if (Number.isFinite(time) && time < cutoff) {
           await rm(path.join(logsDirectory(), entry.name), { force: true });

@@ -19,11 +19,11 @@ import type {
 
 const devServerUrl = process.env.KAFKA_TOOL_DEV_SERVER_URL;
 let mainWindow: BrowserWindow | null = null;
-const appUserModelId = "local.kafka-tool";
+const appUserModelId = "local.kafkapilot";
 let isCleaningUpConsumers = false;
 let menuLanguage: AppMenuLanguage = app.getLocale().toLowerCase().startsWith("ko") ? "ko" : "en";
 
-void writeAppLog("info", "app", `Kafka Tool starting. version=${app.getVersion()} platform=${process.platform} arch=${process.arch}`);
+void writeAppLog("info", "app", `KafkaPilot starting. version=${app.getVersion()} platform=${process.platform} arch=${process.arch}`);
 
 function sendUpdateStatus(status: UpdateStatus) {
   mainWindow?.webContents.send("updates:status", status);

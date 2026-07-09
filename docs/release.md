@@ -1,6 +1,6 @@
 ﻿# Release Guide
 
-Kafka Tool releases are published from `main`.
+KafkaPilot releases are published from `main`.
 
 ## Branches
 

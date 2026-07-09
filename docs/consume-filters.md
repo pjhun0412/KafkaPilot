@@ -43,7 +43,7 @@ headers.traceId exists
 
 Consume can display Key and Value as `Text`, `JSON`, `Hex`, or `Base64`.
 
-Filtering works against the displayed message data in the renderer. For large raw payloads, Kafka Tool keeps only a fixed amount of raw bytes per message to protect memory. If a payload exceeds that raw-byte limit, Hex/Base64-only inspection may show a retained-bytes warning.
+Filtering works against the displayed message data in the renderer. For large raw payloads, KafkaPilot keeps only a fixed amount of raw bytes per message to protect memory. If a payload exceeds that raw-byte limit, Hex/Base64-only inspection may show a retained-bytes warning.
 
 ## Export
 

@@ -1,6 +1,6 @@
 # macOS Internal Install
 
-Kafka Tool macOS builds can be distributed internally without Apple signing or notarization.
+KafkaPilot macOS builds can be distributed internally without Apple signing or notarization.
 
 ## Build
 
@@ -25,11 +25,11 @@ Recommended local toolchain:
 
 ## Install
 
-Copy the generated macOS artifact to the target Mac and move `Kafka Tool.app` to `Applications`.
+Copy the generated macOS artifact to the target Mac and move `KafkaPilot.app` to `Applications`.
 
 If macOS blocks the first launch, use:
 
-1. Right-click `Kafka Tool.app`
+1. Right-click `KafkaPilot.app`
 2. Click `Open`
 3. Confirm `Open`
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Kafka Tool
+# KafkaPilot
 
 **토픽 브라우징을 넘어선 로컬 Kafka 데스크톱 클라이언트.**
 
@@ -16,7 +16,7 @@ Consume · Replay · Produce · Map Viewer · Consumer Group 관리
 
 ---
 
-대부분의 Kafka UI는 토픽 조회와 메시지 읽기에서 멈춥니다. Kafka Tool은 그 다음 워크플로우까지 다룹니다. **다른 클러스터로 메시지 재전송**, **Consumer Group Offset 안전한 리셋**, **실시간 좌표 스트림 지도 시각화** — 서버 없이 로컬에서 실행되는 하나의 앱으로.
+대부분의 Kafka UI는 토픽 조회와 메시지 읽기에서 멈춥니다. KafkaPilot은 그 다음 워크플로우까지 다룹니다. **다른 클러스터로 메시지 재전송**, **Consumer Group Offset 안전한 리셋**, **실시간 좌표 스트림 지도 시각화** — 서버 없이 로컬에서 실행되는 하나의 앱으로.
 
 ---
 

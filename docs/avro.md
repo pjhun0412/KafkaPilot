@@ -1,6 +1,6 @@
 # Avro
 
-Kafka Tool supports optional Avro decoding and encoding.
+KafkaPilot supports optional Avro decoding and encoding.
 
 ## Schema Registry
 
@@ -30,6 +30,6 @@ Supported inputs:
 
 When a manual schema is registered for a topic, Produce can serialize the message value with that schema.
 
-If decoding fails, Kafka Tool keeps the original payload visible and shows the decode error in the UI.
+If decoding fails, KafkaPilot keeps the original payload visible and shows the decode error in the UI.
 
 Manual schemas and Schema Registry credentials are included in app settings. Treat exported settings files carefully when secrets are included.

@@ -5,7 +5,7 @@ import { getProfile } from "./storage.js";
 export function createKafka(profile: ServerProfile) {
   const sasl = profile.security?.sasl;
   return new Kafka({
-    clientId: "kafka-tool",
+    clientId: "kafkapilot",
     brokers: profile.brokers,
     ssl: profile.security?.ssl,
     sasl: sasl?.mechanism === "oauthbearer"

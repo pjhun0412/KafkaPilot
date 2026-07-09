@@ -10,7 +10,7 @@ function shortHash(value: string) {
 }
 
 export function kafkaToolConsumerGroupId(kind: "offset" | "time" | "live", parts: Array<string | number | undefined>) {
-  return `kafka-tool-${kind}-${shortHash(parts.map((part) => String(part ?? "")).join(":"))}`;
+  return `kafkapilot-${kind}-${shortHash(parts.map((part) => String(part ?? "")).join(":"))}`;
 }
 
 export async function shutdownConsumer(consumer: Consumer) {

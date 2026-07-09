@@ -125,7 +125,7 @@ export function WorkspaceSidebar({
       <div className="brand">
         <Database size={24} />
         <div>
-          <strong>Kafka Tool</strong>
+          <strong>KafkaPilot</strong>
           <span>{t(language, "label.desktopClient")}</span>
         </div>
         <button className="icon-button add-server" onClick={onNewServer} title={t(language, "title.addServer")}>

@@ -28,7 +28,7 @@ const MIN_MOVE_DURATION_MS = 300;
 const MAX_MOVE_DURATION_MS = 1200;
 const TRAIL_GAP_METERS = 250;
 const FOLLOW_CENTER_INTERVAL_MS = 48;
-const OUTLIER_SETTINGS_STORAGE_KEY = "kafka-tool.map-viewer.outlier-settings";
+const OUTLIER_SETTINGS_STORAGE_KEY = "kafkapilot.map-viewer.outlier-settings";
 const vehicles = new Map<string, VehicleState>();
 type AlertEvent = {
   id: string;
@@ -889,7 +889,7 @@ if (window.liveMapApi?.onPoints) {
   }
 } else {
   latestEl.textContent = "Map bridge is not ready";
-  emptyEl.textContent = "Map Viewer could not connect to Kafka Tool. Close this window and open Map again.";
+  emptyEl.textContent = "Map Viewer could not connect to KafkaPilot. Close this window and open Map again.";
 }
 
 syncOutlierSettingsInputs();

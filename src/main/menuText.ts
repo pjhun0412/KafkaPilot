@@ -27,7 +27,7 @@ export const menuText = {
     viewerTips: "Message Viewer",
     recordTips: "Live Record",
     releaseNotes: "Release Notes",
-    about: "Kafka Tool 정보",
+    about: "KafkaPilot 정보",
     helpOk: "확인",
     helpShortcutsTitle: "단축키",
     helpShortcutsMessage: joinHelp([
@@ -167,9 +167,9 @@ export const menuText = {
       "  대량 수집은 Record를 사용하고, UI에는 필요한 max messages만 유지하는 것을 권장합니다.",
       "  파일 쓰기 속도보다 수신 속도가 빠른 경우 내부적으로 쓰기 순서를 기다려 메모리 증가를 줄입니다."
     ]),
-    aboutTitle: "Kafka Tool 정보",
+    aboutTitle: "KafkaPilot 정보",
     aboutMessage: joinHelp([
-      "Kafka Tool desktop client",
+      "KafkaPilot desktop client",
       "",
       "Broker, Topic, Consumer Group, Produce, Consume, Avro, Record 작업을 한 곳에서 관리합니다.",
       "GitHub Releases 기반 자동 업데이트와 Windows/macOS 패키징을 지원합니다."
@@ -198,7 +198,7 @@ export const menuText = {
     viewerTips: "Message Viewer",
     recordTips: "Live Record",
     releaseNotes: "Release Notes",
-    about: "About Kafka Tool",
+    about: "About KafkaPilot",
     helpOk: "OK",
     helpShortcutsTitle: "Shortcuts",
     helpShortcutsMessage: joinHelp([
@@ -338,9 +338,9 @@ export const menuText = {
       "  Use Record for large captures and keep only the required max messages in the UI.",
       "  If writes are slower than incoming messages, writes are awaited in order to reduce memory growth."
     ]),
-    aboutTitle: "About Kafka Tool",
+    aboutTitle: "About KafkaPilot",
     aboutMessage: joinHelp([
-      "Kafka Tool desktop client",
+      "KafkaPilot desktop client",
       "",
       "Manage Broker, Topic, Consumer Group, Produce, Consume, Avro, and Record workflows in one place.",
       "Supports GitHub Releases based auto updates and Windows/macOS packaging."

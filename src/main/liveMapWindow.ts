@@ -36,7 +36,7 @@ export async function openLiveMapWindow() {
     height: 720,
     minWidth: 720,
     minHeight: 520,
-    title: "Kafka Tool Map Viewer",
+    title: "KafkaPilot Map Viewer",
     icon: appIconPath(),
     webPreferences: {
       preload: preloadPath,
