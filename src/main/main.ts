@@ -9,6 +9,7 @@ import { registerServerIpcHandlers } from "./ipc/servers.js";
 import { registerTopicIpcHandlers } from "./ipc/topics.js";
 import { logMainError, pruneOldLogs, writeAppLog } from "./logger.js";
 import { clearLiveMapPoints, getLiveMapPoints, openLiveMapWindow, sendLiveMapPoints } from "./liveMapWindow.js";
+import { runLegacyMigration } from "./legacyMigration.js";
 import { createApplicationMenu, getLiveRecordTitle, resolveMenuLanguage } from "./menu.js";
 import { createSettingsTransferActions } from "./settingsTransfer.js";
 import { createMainWindow } from "./window.js";
@@ -100,7 +101,10 @@ if (process.platform === "win32") {
   app.setAppUserModelId(appUserModelId);
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+  await runLegacyMigration();
+  void createWindow();
+});
 
 app.on("before-quit", (event) => {
   if (isCleaningUpConsumers || !consumeProduceService.hasActiveConsumers()) {

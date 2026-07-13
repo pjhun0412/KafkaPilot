@@ -190,13 +190,17 @@ function toStoredProfile(profile: ServerProfile): StoredServerProfile {
 
 function fromStoredProfile(profile: StoredServerProfile): { profile: ServerProfile; migrated: boolean } {
   let migrated = false;
+  // 복호화 실패 시 해당 서버만 시크릿 초기화 (전체 목록 로드는 유지)
+  const tryDecrypt = (value: string | undefined) => {
+    try { return decryptSecret(value); } catch { return undefined; }
+  };
   const clientSecret = profile.security?.sasl?.clientSecret ??
-    decryptSecret(profile.security?.sasl?.clientSecretEncrypted);
+    tryDecrypt(profile.security?.sasl?.clientSecretEncrypted);
   const registryPassword = profile.schemaRegistry?.auth?.type === "basic"
-    ? profile.schemaRegistry.auth.password ?? decryptSecret(profile.schemaRegistry.auth.passwordEncrypted)
+    ? profile.schemaRegistry.auth.password ?? tryDecrypt(profile.schemaRegistry.auth.passwordEncrypted)
     : undefined;
   const registryToken = profile.schemaRegistry?.auth?.type === "bearer"
-    ? profile.schemaRegistry.auth.token ?? decryptSecret(profile.schemaRegistry.auth.tokenEncrypted)
+    ? profile.schemaRegistry.auth.token ?? tryDecrypt(profile.schemaRegistry.auth.tokenEncrypted)
     : undefined;
 
   if (
@@ -401,7 +405,8 @@ export function normalizePreferences(preferences?: Partial<AppPreferences>): App
     diagnostics: preferences?.diagnostics ?? defaultPreferences.diagnostics,
     releaseNotes: preferences?.releaseNotes ?? {},
     exportFormatTemplate: preferences?.exportFormatTemplate ?? defaultPreferences.exportFormatTemplate,
-    windowBounds: preferences?.windowBounds
+    windowBounds: preferences?.windowBounds,
+    migratedFromKafkaTool: preferences?.migratedFromKafkaTool
   };
 }
 

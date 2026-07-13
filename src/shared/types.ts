@@ -279,6 +279,7 @@ export type AppPreferences = {
     height: number;
     maximized: boolean;
   }>;
+  migratedFromKafkaTool?: boolean;
 };
 
 export type AppSettingsBundle = {

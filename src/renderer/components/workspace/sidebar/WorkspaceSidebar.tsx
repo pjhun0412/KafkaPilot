@@ -1,5 +1,5 @@
 ﻿import type React from "react";
-import { Database, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { ServerProfile, TopicSummary } from "../../../../shared/types";
 import { useAppLanguage } from "../../../hooks/state/useAppLanguage";
 import { t } from "../../../i18n";
@@ -123,7 +123,11 @@ export function WorkspaceSidebar({
   return (
     <aside className="sidebar">
       <div className="brand">
-        <Database size={24} />
+        <svg width="28" height="28" viewBox="0 0 28 28" style={{ flexShrink: 0 }}>
+          <rect width="28" height="28" fill="#0d141f" rx="5" ry="5" />
+          <rect x="1.2" y="1.2" width="25.6" height="25.6" rx="4" ry="4" fill="none" stroke="#3794ff" strokeWidth="1.6" />
+          <text x="14" y="15" textAnchor="middle" dominantBaseline="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontWeight="700" fontSize="12" fill="#3794ff">KP</text>
+        </svg>
         <div>
           <strong>KafkaPilot</strong>
           <span>{t(language, "label.desktopClient")}</span>
