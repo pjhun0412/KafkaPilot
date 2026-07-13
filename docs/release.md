@@ -54,8 +54,8 @@ Remove-Item Env:GH_TOKEN
 The release should include:
 
 ```text
-Kafka-Tool-Setup-{version}.exe
-Kafka-Tool-Setup-{version}.exe.blockmap
+KafkaPilot-Setup-{version}.exe
+KafkaPilot-Setup-{version}.exe.blockmap
 latest.yml
 ```
 

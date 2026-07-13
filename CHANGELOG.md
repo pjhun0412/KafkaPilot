@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.7
+
+### Changed
+
+- Rebranded the former Kafka-Tool product identity to `KafkaPilot` across the app metadata, installer artifact name, and documentation.
+- Kept the legacy Kafka Tool settings migration path so existing users can keep their local profiles after reinstalling under KafkaPilot.
+
+### Fixed
+
+- Keep `Ctrl+A` / `Cmd+A` selection scoped to the active Raw, Tree, or Preview message viewer area after it is clicked.
+- Preserve normal select-all behavior inside search inputs, editors, and other form controls.
+
 ## 2.0.6
 
 ### Added

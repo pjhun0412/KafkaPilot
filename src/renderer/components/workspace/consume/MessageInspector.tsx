@@ -223,6 +223,7 @@ export function MessageInspector(props: {
   const produceMenuRef = useRef<HTMLDivElement | null>(null);
   const replayServerPickerRef = useRef<HTMLDivElement | null>(null);
   const replayTopicPickerRef = useRef<HTMLDivElement | null>(null);
+  const inspectorSelectableRef = useRef<HTMLElement | null>(null);
   async function copyText(text: string) {
     await navigator.clipboard.writeText(text);
   }
@@ -326,6 +327,33 @@ export function MessageInspector(props: {
   ], [language, props.allReplayMessages, props.filteredReplayMessages, props.selectedMessage, props.selectedReplayMessages]);
 
   useEffect(() => {
+    function selectInspectorContents(element: HTMLElement) {
+      const selection = window.getSelection();
+      if (!selection) return;
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      element.focus({ preventScroll: true });
+    }
+
+    function selectAllInspectorText(event: KeyboardEvent) {
+      if (event.key.toLowerCase() !== "a" || (!event.metaKey && !event.ctrlKey) || event.altKey) return;
+      const eventTarget = event.target instanceof Element ? event.target : null;
+      if (eventTarget?.closest("input, textarea, select, [contenteditable='true']")) return;
+      const selection = window.getSelection();
+      const anchorElement = selection?.anchorNode instanceof Element ? selection.anchorNode : selection?.anchorNode?.parentElement;
+      const focusElement = selection?.focusNode instanceof Element ? selection.focusNode : selection?.focusNode?.parentElement;
+      const selectedElement = anchorElement?.closest<HTMLElement>(".message-view, .message-tree")
+        ?? focusElement?.closest<HTMLElement>(".message-view, .message-tree")
+        ?? eventTarget?.closest<HTMLElement>(".message-view, .message-tree")
+        ?? inspectorSelectableRef.current;
+      if (!selectedElement || !document.body.contains(selectedElement)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      selectInspectorContents(selectedElement);
+    }
+
     function copySelectedInspectorText(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "c" || (!event.metaKey && !event.ctrlKey) || event.altKey) return;
       const selection = window.getSelection();
@@ -344,9 +372,17 @@ export function MessageInspector(props: {
       void navigator.clipboard.writeText(selectedText);
     }
 
+    window.addEventListener("keydown", selectAllInspectorText, true);
     window.addEventListener("keydown", copySelectedInspectorText, true);
-    return () => window.removeEventListener("keydown", copySelectedInspectorText, true);
+    return () => {
+      window.removeEventListener("keydown", selectAllInspectorText, true);
+      window.removeEventListener("keydown", copySelectedInspectorText, true);
+    };
   }, []);
+
+  function rememberInspectorSelectable(element: HTMLElement) {
+    inspectorSelectableRef.current = element;
+  }
 
   useEffect(() => {
     function closeProduceMenu(event: PointerEvent) {
@@ -1317,7 +1353,12 @@ export function MessageInspector(props: {
       {props.selectedMessage ? (
         props.mode === "tree" ? (
           canShowTree ? (
-            <div className="message-tree">
+            <div
+              className="message-tree"
+              tabIndex={0}
+              onFocus={(event) => rememberInspectorSelectable(event.currentTarget)}
+              onMouseDown={(event) => rememberInspectorSelectable(event.currentTarget)}
+            >
               <MessageTreeNode
                 name="message"
                 value={props.payload}
@@ -1329,17 +1370,43 @@ export function MessageInspector(props: {
               />
             </div>
           ) : (
-            <pre className="message-view">{t(language, "label.noStructuredPayload")}</pre>
+            <pre
+              className="message-view"
+              tabIndex={0}
+              onFocus={(event) => rememberInspectorSelectable(event.currentTarget)}
+              onMouseDown={(event) => rememberInspectorSelectable(event.currentTarget)}
+            >
+              {t(language, "label.noStructuredPayload")}
+            </pre>
           )
         ) : props.mode === "preview" ? (
-          <pre className={props.previewMode === "hex" ? "message-view message-preview hex-preview" : "message-view message-preview"}>
+          <pre
+            className={props.previewMode === "hex" ? "message-view message-preview hex-preview" : "message-view message-preview"}
+            tabIndex={0}
+            onFocus={(event) => rememberInspectorSelectable(event.currentTarget)}
+            onMouseDown={(event) => rememberInspectorSelectable(event.currentTarget)}
+          >
             {renderHighlightedText(previewText || t(language, "label.emptyPayload"), props.search)}
           </pre>
         ) : (
-          <pre className="message-view">{renderRawJsonText(props.rawText, props.search)}</pre>
+          <pre
+            className="message-view"
+            tabIndex={0}
+            onFocus={(event) => rememberInspectorSelectable(event.currentTarget)}
+            onMouseDown={(event) => rememberInspectorSelectable(event.currentTarget)}
+          >
+            {renderRawJsonText(props.rawText, props.search)}
+          </pre>
         )
       ) : (
-        <pre className="message-view">{t(language, "label.selectMessageToInspect")}</pre>
+        <pre
+          className="message-view"
+          tabIndex={0}
+          onFocus={(event) => rememberInspectorSelectable(event.currentTarget)}
+          onMouseDown={(event) => rememberInspectorSelectable(event.currentTarget)}
+        >
+          {t(language, "label.selectMessageToInspect")}
+        </pre>
       )}
     </section>
   );

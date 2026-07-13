@@ -11,6 +11,48 @@ export type ReleaseNote = {
 };
 
 export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
+  "2.0.7": {
+    ko: {
+      title: "KafkaPilot 2.0.7",
+      sections: [
+        {
+          heading: "리브랜딩",
+          items: [
+            "기존 Kafka-Tool 제품명을 KafkaPilot으로 정리했습니다.",
+            "앱 이름, 실행 파일명, 배포 파일명, 문서 표기를 KafkaPilot 기준으로 맞췄습니다.",
+            "기존 Kafka Tool 설정은 KafkaPilot으로 자동 마이그레이션됩니다."
+          ]
+        },
+        {
+          heading: "버그 수정",
+          items: [
+            "Message Viewer의 Raw, Tree, Preview 영역을 클릭한 뒤 Ctrl+A 또는 Cmd+A를 누르면 해당 뷰어 내부 데이터만 선택되도록 수정했습니다.",
+            "검색창, 편집창, 입력 필드에서는 기존처럼 필드 내부 텍스트만 전체 선택됩니다."
+          ]
+        }
+      ]
+    },
+    en: {
+      title: "KafkaPilot 2.0.7",
+      sections: [
+        {
+          heading: "Rebrand",
+          items: [
+            "Renamed the former Kafka-Tool product identity to KafkaPilot.",
+            "Aligned the app name, executable name, installer artifact name, and documentation with KafkaPilot.",
+            "Existing Kafka Tool settings are migrated into KafkaPilot automatically."
+          ]
+        },
+        {
+          heading: "Bug fixes",
+          items: [
+            "After clicking Raw, Tree, or Preview in the Message Viewer, Ctrl+A / Cmd+A now selects only the data inside that viewer area.",
+            "Search boxes, editors, and other form fields keep their normal select-all behavior."
+          ]
+        }
+      ]
+    }
+  },
   "2.0.6": {
     ko: {
       title: "KafkaPilot 2.0.6",

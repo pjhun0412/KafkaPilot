@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+app.setName("KafkaPilot"); // dev/prod 모두 동일한 userData 경로 보장
 import { checkForUpdates as runUpdateCheck } from "./autoUpdate.js";
 import { registerAppSettingsIpcHandlers } from "./ipc/appSettings.js";
 import { registerBrokerIpcHandlers } from "./ipc/brokers.js";

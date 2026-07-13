@@ -11,6 +11,11 @@
   @apply rounded bg-yellow-300 px-0.5 text-ink;
 }
 
+.message-view:focus,
+.message-tree:focus {
+  @apply outline-none ring-1 ring-[#3794ff]/45;
+}
+
 .message-view pre,
 .message-view code {
   @apply text-[#e6edf3];
