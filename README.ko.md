@@ -2,15 +2,22 @@
 
 # KafkaPilot
 
-**데스크탑 Kafka 클라이언트. 설치하고 바로 실행 — 서버 불필요.**
-
-Consume · Replay · Produce · Map Viewer · Consumer Group 관리
+**Offset Explorer보다 강력하고, AKHQ처럼 서버가 필요 없는 Kafka 데스크탑 클라이언트.**
 
 [English](README.md) &nbsp;·&nbsp; [변경 이력](CHANGELOG.md) &nbsp;·&nbsp; [문서](docs/)
 
 ![Version](https://img.shields.io/badge/version-2.0.7-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
 
 [![PayPal](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://www.paypal.com/ncp/payment/R6DBD3HSJ9TPE)
+
+| | KafkaPilot | AKHQ / Kafka UI / RedPanda | Offset Explorer |
+|---|:---:|:---:|:---:|
+| 서버·Docker 불필요 | ✅ | ❌ | ✅ |
+| 무료·오픈소스 | ✅ | ✅ | ❌ |
+| Map Viewer | ✅ | ❌ | ❌ |
+| Split Pane | ✅ | ❌ | ❌ |
+| Value Columns | ✅ | ❌ | ❌ |
+| Live Record (파일 기록) | ✅ | ❌ | ❌ |
 
 </div>
 
@@ -27,19 +34,6 @@ KafkaPilot은 일반 프로그램처럼 설치하고 Kafka 브로커에 바로 �
 Kafka를 활용한 애플리케이션을 개발하는 **개발자**를 위한 툴입니다. 클러스터 운영자보다는, 메시지를 프로듀스하고 컨슘하는 코드를 작성하면서 Kafka 토픽을 빠르게 검증하고 디버깅해야 하는 분들에게 적합합니다.
 
 특히 **실시간 위치 데이터**를 다루는 팀에게 유용합니다 — 자율주행, 스마트시티, BIS, C-ITS 환경에서 웹 대시보드가 준비되기 전에 좌표 스트림이 제대로 들어오는지 바로 지도로 확인할 수 있습니다.
-
----
-
-## 왜 KafkaPilot인가요?
-
-| | KafkaPilot | AKHQ / Kafka UI / RedPanda | Offset Explorer |
-|---|:---:|:---:|:---:|
-| 서버·Docker 불필요 | ✅ | ❌ | ✅ |
-| 무료·오픈소스 | ✅ | ✅ | ❌ |
-| Map Viewer | ✅ | ❌ | ❌ |
-| Split Pane | ✅ | ❌ | ❌ |
-| Value Columns | ✅ | ❌ | ❌ |
-| Live Record (파일 기록) | ✅ | ❌ | ❌ |
 
 ---
 

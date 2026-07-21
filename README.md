@@ -2,15 +2,22 @@
 
 # KafkaPilot
 
-**Desktop Kafka client. Install and run — no server required.**
-
-Consume · Replay · Produce · Map Viewer · Consumer Group Management
+**The Kafka desktop client that installs in seconds — more capable than Offset Explorer, no server unlike AKHQ.**
 
 [한국어](README.ko.md) &nbsp;·&nbsp; [Changelog](CHANGELOG.md) &nbsp;·&nbsp; [Docs](docs/)
 
 ![Version](https://img.shields.io/badge/version-2.0.7-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
 
 [![PayPal](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://www.paypal.com/ncp/payment/R6DBD3HSJ9TPE)
+
+| | KafkaPilot | AKHQ / Kafka UI / RedPanda | Offset Explorer |
+|---|:---:|:---:|:---:|
+| No server or Docker needed | ✅ | ❌ | ✅ |
+| Free & open source | ✅ | ✅ | ❌ |
+| Map Viewer | ✅ | ❌ | ❌ |
+| Split Pane | ✅ | ❌ | ❌ |
+| Value Columns | ✅ | ❌ | ❌ |
+| Live Record to file | ✅ | ❌ | ❌ |
 
 </div>
 
@@ -27,19 +34,6 @@ KafkaPilot is a desktop app that installs like any other application and connect
 **Developers** building Kafka-integrated applications — not cluster operators. If you write code that produces or consumes messages and need a reliable way to inspect, test, and debug your Kafka topics, KafkaPilot is built for you.
 
 It's especially useful for teams working with **real-time location data** — autonomous vehicles, smart city, BIS, C-ITS — where a live map of coordinate streams can save hours of debugging before a web dashboard even exists.
-
----
-
-## Why KafkaPilot?
-
-| | KafkaPilot | AKHQ / Kafka UI / RedPanda | Offset Explorer |
-|---|:---:|:---:|:---:|
-| No server or Docker needed | ✅ | ❌ | ✅ |
-| Free & open source | ✅ | ✅ | ❌ |
-| Map Viewer | ✅ | ❌ | ❌ |
-| Split Pane | ✅ | ❌ | ❌ |
-| Value Columns | ✅ | ❌ | ❌ |
-| Live Record to file | ✅ | ❌ | ❌ |
 
 ---
 
