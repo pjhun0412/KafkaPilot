@@ -2,7 +2,14 @@
 
 # KafkaPilot
 
-**Offset Explorer보다 강력하고, AKHQ처럼 서버가 필요 없는 Kafka 데스크탑 클라이언트.**
+**애플리케이션 개발자를 위한 데스크탑 Kafka 클라이언트.**
+
+서버 설정 없이 설치하고 바로 연결. 몇 초 안에 Kafka 작업을 시작할 수 있습니다.
+
+✅ &nbsp;Split Pane으로 두 토픽 동시에 Consume & Produce<br>
+✅ &nbsp;필드 치환을 지원하는 클러스터 간 메시지 Replay<br>
+✅ &nbsp;미리보기가 있는 안전한 Consumer Group Offset Reset<br>
+✅ &nbsp;실시간 GPS / 좌표 데이터를 위한 내장 Map Viewer
 
 [English](README.md) &nbsp;·&nbsp; [변경 이력](CHANGELOG.md) &nbsp;·&nbsp; [문서](docs/)
 

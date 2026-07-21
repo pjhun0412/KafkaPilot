@@ -2,7 +2,14 @@
 
 # KafkaPilot
 
-**The Kafka desktop client that installs in seconds — more capable than Offset Explorer, no server unlike AKHQ.**
+**Desktop Kafka client for application developers.**
+
+No server setup. Install, connect, and start working with Kafka in seconds.
+
+✅ &nbsp;Side-by-side topic Consume & Produce with Split Pane<br>
+✅ &nbsp;Replay messages between clusters with field overrides<br>
+✅ &nbsp;Safe Consumer Group Offset Reset with preview<br>
+✅ &nbsp;Built-in Map Viewer for real-time GPS / coordinate payloads
 
 [한국어](README.ko.md) &nbsp;·&nbsp; [Changelog](CHANGELOG.md) &nbsp;·&nbsp; [Docs](docs/)
 
