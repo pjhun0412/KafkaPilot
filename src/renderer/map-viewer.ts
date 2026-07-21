@@ -649,26 +649,46 @@ function upsertVehicle(point: LiveMapPoint) {
 }
 
 function renderVehicleList() {
-  const items = Array.from(vehicles.values()).sort((left, right) => String(right.point.timestamp).localeCompare(String(left.point.timestamp)));
-  vehicleListEl.replaceChildren();
-  const fragment = document.createDocumentFragment();
-  for (const vehicle of items) {
+  const items = Array.from(vehicles.values()).sort((left, right) => String(left.point.id).localeCompare(String(right.point.id)));
+
+  // 기존 DOM 버튼을 ID로 맵핑 (재활용하여 깜빡임 방지)
+  const existing = new Map<string, HTMLButtonElement>();
+  for (const el of vehicleListEl.querySelectorAll<HTMLButtonElement>("[data-vehicle-id]")) {
+    existing.set(el.dataset.vehicleId!, el);
+  }
+
+  // 사라진 차량 제거
+  const currentIds = new Set(items.map((v) => v.point.id));
+  for (const [id, el] of existing) {
+    if (!currentIds.has(id)) el.remove();
+  }
+
+  // 순서대로 업데이트 또는 삽입 (DOM 재사용)
+  for (let i = 0; i < items.length; i++) {
+    const vehicle = items[i];
     const point = vehicle.point;
-    const button = document.createElement("button");
-    button.type = "button";
     const alertText = alertSummary(vehicle.alerts);
+    const speed = formatSpeed(point.meta?.speed);
+    const speedValue = speed ? `${speed} km/h` : "";
+    const headingValue = Number.isFinite(point.heading) ? `${Number(point.heading).toFixed(0)}${String.fromCharCode(176)}` : "";
+    const status = [speedValue, headingValue].filter(Boolean).join(" / ");
+
+    let button = existing.get(point.id);
+    if (!button) {
+      button = document.createElement("button");
+      button.type = "button";
+      button.dataset.vehicleId = point.id;
+      button.style.setProperty("--marker-color", markerColor(point.id));
+      button.addEventListener("click", () => focusVehicleById(point.id));
+    }
+
     button.className = [
       "vehicle-item",
       selectedId === point.id ? "selected" : "",
       vehicle.alerts.length > 0 ? "has-alert" : "",
       hasDangerAlert(vehicle.alerts) ? "danger" : ""
     ].filter(Boolean).join(" ");
-    button.style.setProperty("--marker-color", markerColor(point.id));
 
-    const speed = formatSpeed(point.meta?.speed);
-    const speedValue = speed ? `${speed} km/h` : "";
-    const headingValue = Number.isFinite(point.heading) ? `${Number(point.heading).toFixed(0)}${String.fromCharCode(176)}` : "";
-    const status = [speedValue, headingValue].filter(Boolean).join(" / ");
     button.innerHTML = `
       <span class="vehicle-color"></span>
       <span class="vehicle-card-body">
@@ -680,10 +700,12 @@ function renderVehicleList() {
         ${alertText ? `<span class="vehicle-alert">${escapeHtml(alertText)}</span>` : ""}
       </span>
     `;
-    button.addEventListener("click", () => focusVehicleById(point.id));
-    fragment.appendChild(button);
+
+    // 올바른 위치에 없으면 이동 (순서 유지)
+    if (vehicleListEl.children[i] !== button) {
+      vehicleListEl.insertBefore(button, vehicleListEl.children[i] ?? null);
+    }
   }
-  vehicleListEl.appendChild(fragment);
 }
 
 function renderOutlierList() {

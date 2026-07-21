@@ -2,7 +2,7 @@
 
 # KafkaPilot
 
-**A local desktop client for Apache Kafka that goes beyond topic browsing.**
+**Desktop Kafka client. Install and run — no server required.**
 
 Consume · Replay · Produce · Map Viewer · Consumer Group Management
 
@@ -16,21 +16,63 @@ Consume · Replay · Produce · Map Viewer · Consumer Group Management
 
 ---
 
-Most Kafka UIs let you browse topics and read messages. KafkaPilot adds the workflows that come next: **replaying messages to another cluster**, **resetting consumer group offsets safely**, and **visualizing live coordinate streams on a map** — all from one app that runs locally with no server to deploy.
+Web-based Kafka UIs like AKHQ, Kafka UI, and RedPanda Console are powerful — but they require Docker, a server, or a deployment pipeline before you can open a single topic. Offset Explorer skips the setup but leaves you with limited functionality.
+
+KafkaPilot is a desktop app that installs like any other application and connects directly to your Kafka brokers. No server. No Docker. No configuration files to manage. Download, install, and start consuming.
 
 ---
 
-## What's inside
+## Who is this for?
 
-| | |
-|---|---|
-| **Consume** | Offset, Time, and Live modes with virtualized grids, payload format selectors, and Value Columns for extracting structured JSON fields |
-| **Message Replay** | Send consumed messages to any connected server. Single or batch, with Dynamic Field overrides and background job progress |
-| **Produce** | Single-message and interval publishing with a Dynamic Template engine for repeatable test data |
-| **Map Viewer** | A standalone window for Kafka topics that carry coordinate data — supports WGS84, Korea TM, and UTM with vehicle markers, trails, and follow mode |
-| **Consumer Groups** | Lag by topic and partition with a safe Offset Reset flow: preview, active-group protection, and explicit confirmation |
-| **Split Pane** | Two topics side by side with independent consume, produce, and group state |
-| **Avro** | Decode via Schema Registry or manually registered topic schemas |
+**Developers** building Kafka-integrated applications — not cluster operators. If you write code that produces or consumes messages and need a reliable way to inspect, test, and debug your Kafka topics, KafkaPilot is built for you.
+
+It's especially useful for teams working with **real-time location data** — autonomous vehicles, smart city, BIS, C-ITS — where a live map of coordinate streams can save hours of debugging before a web dashboard even exists.
+
+---
+
+## Why KafkaPilot?
+
+| | KafkaPilot | AKHQ / Kafka UI / RedPanda | Offset Explorer |
+|---|:---:|:---:|:---:|
+| No server or Docker needed | ✅ | ❌ | ✅ |
+| Free & open source | ✅ | ✅ | ❌ |
+| Map Viewer | ✅ | ❌ | ❌ |
+| Split Pane | ✅ | ❌ | ❌ |
+| Value Columns | ✅ | ❌ | ❌ |
+| Live Record to file | ✅ | ❌ | ❌ |
+
+---
+
+## Map Viewer
+
+![Map Viewer](docs/map-viewer.gif)
+
+A dedicated window for Kafka topics that carry location data. Open it from any consumed message.
+
+When your web dashboard isn't ready yet and you need to verify that coordinate data is flowing correctly, Map Viewer gives you a live visual in seconds — no extra setup required.
+
+- Per-topic **field mapping** for custom JSON paths (latitude, longitude, heading, speed, vehicle ID)
+- **Coordinate conversion**: WGS84 degree, WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
+- Vehicle markers with **heading-aware rotation** and smooth movement interpolation
+- **Trails** showing recent movement history per vehicle
+- **Follow mode** locks the camera to a selected vehicle; auto-fit and free-move also available
+- Speed display in `km/h` or `m/s`
+
+---
+
+## Split Pane
+
+![Split Pane](docs/split-pane.gif)
+
+Open two topics side by side with fully independent consume, produce, and consumer group state per pane. Compare request and response topics, monitor a dead-letter queue alongside your main topic, or produce test messages while watching the result in real time.
+
+---
+
+## Value Columns
+
+![Value Columns](docs/value-columns.gif)
+
+Pin specific JSON paths — like `vehicleId`, `status`, or `latitude` — as dedicated columns in the consume grid. Add them directly from the Message Inspector tree. Selections persist per topic and are included in CSV exports.
 
 ---
 
@@ -40,46 +82,32 @@ Three modes for every use case:
 
 - **Offset** — read from a specific start offset with a configurable limit
 - **Time** — query by timestamp range
-- **Live** — stream from the latest offset in real time without pulling old committed group offsets
+- **Live** — stream from the latest offset in real time without pulling committed group offsets
 
 Large queries paginate automatically beyond `10,000` messages. Key and Value can be viewed and exported as **Text, JSON, Hex, or Base64**.
 
-**Value Columns** let you pin specific `value.*` paths — like `vehicleId`, `latitude`, or `status` — as dedicated columns in the consume grid. Fields can be added directly from the Message Viewer Tree. Selections persist per topic and are included in CSV exports.
-
-Live Record writes messages to a `JSONL` file stream without buffering the full dataset in renderer memory.
+**Live Record** writes messages to a `JSONL` file stream without buffering the full dataset in renderer memory — safe for high-throughput topics running over extended periods.
 
 ---
 
 ## Message Replay
 
-Send any consumed message to another server and topic from the Message Viewer toolbar — without switching to the Produce tab.
+![Message Replay](docs/replay.png)
+
+Send consumed messages to another server and topic directly from the Message Viewer toolbar — no need to switch to the Produce tab.
 
 - **Scope**: single message, selected rows, filtered results, or all loaded messages
 - **Single replay**: edit the payload directly before sending
 - **Batch replay**: override Value fields with Dynamic Field tokens (`${uuid}`, `${seq:1..100}`, `${date:...}`)
-- **Background jobs**: large replays run with progress, per-message delay control, and abort
+- **Background jobs**: large replays run with progress tracking, per-message delay control, and abort
 
----
-
-## Map Viewer
-
-A dedicated window for Kafka topics that carry location data. Open it from any Consume message toolbar.
-
-- Per-topic **field mapping** for custom JSON paths (latitude, longitude, heading, speed, vehicle ID)
-- **Coordinate conversion**: WGS84 degree, WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
-- Vehicle markers with **heading-aware rotation** and smooth movement interpolation
-- **Trails** showing recent movement history per vehicle
-- **Follow mode** locks the camera to a selected vehicle; auto-fit and free-move also available
-- Speed display in `km/h` or `m/s`
-- Vehicle list with topic, speed, heading, and coordinates
-
-Built for smart-city, BIS, C-ITS, and autonomous-driving Kafka pipelines where inspecting live coordinate streams is part of the daily workflow.
+Useful for reproducing production issues in a dev environment, or migrating messages between clusters.
 
 ---
 
 ## Produce
 
-Single-message publishing and **Interval Produce** with Count or Duration limits. No unlimited mode — KafkaPilot shows a confirmation summary before any interval job starts.
+Single-message publishing and **Interval Produce** with Count or Duration limits. A confirmation summary is shown before any interval job starts.
 
 Dynamic fields work in Key, Headers, and Value:
 
@@ -104,7 +132,7 @@ Dynamic fields work in Key, Headers, and Value:
 
 ## Consumer Groups
 
-Group detail shows committed offsets, beginning and end offsets, and lag by topic partition.
+Group detail shows committed offsets, beginning and end offsets, and lag by topic and partition.
 
 **Offset Reset** is available from any Group detail view with four target modes:
 
@@ -116,7 +144,7 @@ The reset flow requires three steps: select partitions → run preview (shows ta
 
 ## Server Profiles
 
-Each profile stores broker addresses, optional SSL/TLS, optional SASL/OAUTHBEARER, and optional Schema Registry settings. The **Test** button in the dialog verifies the Kafka Admin connection against the current form values — no save required.
+Each profile stores broker addresses, optional SSL/TLS, optional SASL/OAUTHBEARER, and optional Schema Registry settings. The **Test** button verifies the Kafka Admin connection before saving.
 
 ---
 
@@ -141,7 +169,6 @@ All shortcuts can be rebound in `Preferences > Editor > Shortcuts`.
 
 ```bash
 npm ci
-npm run build
 npm run release:win
 ```
 
@@ -168,6 +195,7 @@ npm run release:mac
 - [macOS internal install](docs/macos-install.md)
 - [Consume filters](docs/consume-filters.md)
 - [Avro](docs/avro.md)
+- [Enhancement roadmap](docs/enhancement-roadmap.md)
 - [Project structure](PROJECT_STRUCTURE.md)
 
 ---

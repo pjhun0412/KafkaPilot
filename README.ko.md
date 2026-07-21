@@ -2,13 +2,13 @@
 
 # KafkaPilot
 
-**토픽 브라우징을 넘어선 로컬 Kafka 데스크톱 클라이언트.**
+**데스크탑 Kafka 클라이언트. 설치하고 바로 실행 — 서버 불필요.**
 
 Consume · Replay · Produce · Map Viewer · Consumer Group 관리
 
 [English](README.md) &nbsp;·&nbsp; [변경 이력](CHANGELOG.md) &nbsp;·&nbsp; [문서](docs/)
 
-![Version](https://img.shields.io/badge/version-2.0.6-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0.7-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
 
 [![PayPal](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://www.paypal.com/ncp/payment/R6DBD3HSJ9TPE)
 
@@ -16,21 +16,63 @@ Consume · Replay · Produce · Map Viewer · Consumer Group 관리
 
 ---
 
-대부분의 Kafka UI는 토픽 조회와 메시지 읽기에서 멈춥니다. KafkaPilot은 그 다음 워크플로우까지 다룹니다. **다른 클러스터로 메시지 재전송**, **Consumer Group Offset 안전한 리셋**, **실시간 좌표 스트림 지도 시각화** — 서버 없이 로컬에서 실행되는 하나의 앱으로.
+AKHQ, Kafka UI, RedPanda Console 같은 웹 기반 Kafka UI는 강력하지만, 토픽 하나 열기 전에 Docker나 서버 배포가 필요합니다. Offset Explorer는 설치는 간단하지만 기능이 너무 빈약합니다.
+
+KafkaPilot은 일반 프로그램처럼 설치하고 Kafka 브로커에 바로 연결하는 데스크탑 앱입니다. 서버도, Docker도, 별도 설정 파일도 필요 없습니다. 다운로드하고 설치하면 바로 시작할 수 있습니다.
 
 ---
 
-## 주요 기능
+## 누구를 위한 툴인가요?
 
-| | |
-|---|---|
-| **Consume** | Offset, Time, Live 모드, 가상화 그리드, Payload 포맷 선택, JSON 필드 추출용 Value Columns |
-| **Message Replay** | Consume 메시지를 원하는 서버로 재전송. 단건·배치 지원, Dynamic Field 치환, Background Job |
-| **Produce** | 단건 발행과 Interval Produce, 반복 테스트 데이터를 위한 Dynamic Template 엔진 |
-| **Map Viewer** | 좌표 데이터 토픽 전용 독립 창 — WGS84, Korea TM, UTM 지원, 차량 마커, Trail, Follow 모드 |
-| **Consumer Groups** | 토픽·Partition별 Lag 조회, 안전한 Offset Reset 플로우(미리보기, 활성 Group 보호, 명시적 확인) |
-| **Split Pane** | 두 토픽을 나란히, Consume·Produce·Group 상태 완전 독립 |
-| **Avro** | Schema Registry 또는 수동 등록 토픽 스키마 기반 디코딩 |
+Kafka를 활용한 애플리케이션을 개발하는 **개발자**를 위한 툴입니다. 클러스터 운영자보다는, 메시지를 프로듀스하고 컨슘하는 코드를 작성하면서 Kafka 토픽을 빠르게 검증하고 디버깅해야 하는 분들에게 적합합니다.
+
+특히 **실시간 위치 데이터**를 다루는 팀에게 유용합니다 — 자율주행, 스마트시티, BIS, C-ITS 환경에서 웹 대시보드가 준비되기 전에 좌표 스트림이 제대로 들어오는지 바로 지도로 확인할 수 있습니다.
+
+---
+
+## 왜 KafkaPilot인가요?
+
+| | KafkaPilot | AKHQ / Kafka UI / RedPanda | Offset Explorer |
+|---|:---:|:---:|:---:|
+| 서버·Docker 불필요 | ✅ | ❌ | ✅ |
+| 무료·오픈소스 | ✅ | ✅ | ❌ |
+| Map Viewer | ✅ | ❌ | ❌ |
+| Split Pane | ✅ | ❌ | ❌ |
+| Value Columns | ✅ | ❌ | ❌ |
+| Live Record (파일 기록) | ✅ | ❌ | ❌ |
+
+---
+
+## Map Viewer
+
+![Map Viewer](docs/map-viewer.gif)
+
+좌표 데이터가 포함된 Kafka 토픽을 위한 독립 시각화 창. Consume 메시지 툴바에서 바로 열 수 있습니다.
+
+웹 대시보드가 아직 준비되지 않은 상황에서 좌표 데이터가 정상적으로 들어오는지 확인해야 할 때, Map Viewer로 몇 초 안에 라이브 시각화를 시작할 수 있습니다.
+
+- 커스텀 JSON 경로 지정을 위한 **토픽별 Field Mapping** (위도, 경도, heading, 속도, 차량 ID)
+- **좌표 변환**: WGS84 degree, WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
+- **Heading 반영 회전** 차량 마커와 부드러운 이동 보간
+- 차량별 최근 이동 경로 **Trail**
+- **Follow 모드** — 선택 차량 카메라 고정, auto-fit, free-move 지원
+- 속도 표시 `km/h` 또는 `m/s`
+
+---
+
+## Split Pane
+
+![Split Pane](docs/split-pane.gif)
+
+두 토픽을 나란히 열고 Consume, Produce, Consumer Group 상태를 Pane별로 완전히 독립적으로 운용할 수 있습니다. Request/Response 토픽을 동시에 비교하거나, Dead Letter Queue를 메인 토픽 옆에 놓고 모니터링하거나, 한쪽에서 메시지를 발행하면서 반대쪽에서 결과를 실시간으로 확인할 수 있습니다.
+
+---
+
+## Value Columns
+
+![Value Columns](docs/value-columns.gif)
+
+`vehicleId`, `status`, `latitude` 같은 JSON 경로를 그리드 전용 컬럼으로 고정할 수 있습니다. Message Inspector 트리에서 값을 클릭해 바로 추가할 수 있으며, 선택 항목은 토픽별로 저장되고 CSV Export에 포함됩니다.
 
 ---
 
@@ -44,42 +86,28 @@ Consume · Replay · Produce · Map Viewer · Consumer Group 관리
 
 `10,000`건을 초과하면 자동으로 페이지 조회로 전환됩니다. Key와 Value는 **Text, JSON, Hex, Base64** 형식으로 조회·Export 가능합니다.
 
-**Value Columns**로 `vehicleId`, `latitude`, `status` 같은 `value.*` 경로를 그리드 전용 컬럼으로 고정할 수 있습니다. Message Viewer Tree에서 leaf 값을 바로 추가할 수 있으며, 선택 항목은 토픽별로 저장되고 CSV Export에 포함됩니다.
-
-Live Record는 메시지를 `JSONL` 파일 스트림으로 직접 기록합니다. 장시간 수집 중 Renderer 메모리에 데이터를 쌓지 않습니다.
+**Live Record**는 메시지를 `JSONL` 파일 스트림으로 직접 기록합니다. Renderer 메모리에 데이터를 쌓지 않아 고처리량 토픽을 장시간 수집할 때 안전합니다.
 
 ---
 
 ## Message Replay
 
-Message Viewer 툴바에서 Consume 메시지를 다른 서버와 토픽으로 재전송할 수 있습니다. Produce 탭으로 이동할 필요 없습니다.
+![Message Replay](docs/replay.png)
+
+Message Viewer 툴바에서 Consume 메시지를 다른 서버와 토픽으로 재전송할 수 있습니다. Produce 탭으로 이동할 필요가 없습니다.
 
 - **범위**: 단건 메시지, 선택 행, 필터 결과, 조회된 전체 메시지
 - **단건 Replay**: 전송 전 Payload 직접 편집
 - **Batch Replay**: `${uuid}`, `${seq:1..100}`, `${date:...}` 등 Dynamic Field로 Value 필드 치환
-- **Background Job**: 대량 Replay는 진행률, Delay, 전송 중단을 제어하며 백그라운드 실행
+- **Background Job**: 대량 Replay는 진행률, Delay 조절, 중단을 지원하며 백그라운드 실행
 
----
-
-## Map Viewer
-
-좌표 데이터가 포함된 Kafka 토픽을 위한 독립 시각화 창. Consume 메시지 툴바에서 열 수 있습니다.
-
-- 커스텀 JSON 경로 지정을 위한 **토픽별 Field Mapping** (위도, 경도, heading, 속도, 차량 ID)
-- **좌표 변환**: WGS84 degree, WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
-- **Heading 반영 회전** 차량 마커와 부드러운 이동 보간
-- 차량별 최근 이동 경로 **Trail**
-- **Follow 모드** — 선택 차량 카메라 고정, auto-fit, free-move 지원
-- 속도 표시 `km/h` 또는 `m/s`
-- Topic, 속도, heading, 좌표를 보여주는 차량 리스트
-
-스마트시티, BIS, C-ITS, 자율주행 Kafka 파이프라인처럼 실시간 좌표 스트림 확인이 일상인 개발 워크플로우를 위해 설계했습니다.
+운영 이슈를 개발 환경에서 재현하거나, 클러스터 간 메시지를 이관할 때 유용합니다.
 
 ---
 
 ## Produce
 
-단건 발행과 **Interval Produce** — Count 또는 Duration 제한 필수, 무제한 모드 없음. 시작 전에 토픽, 주기, 종료 조건, 예상 발행 건수를 확인합니다.
+단건 발행과 **Interval Produce** — Count 또는 Duration 제한 필수. 시작 전에 항상 확인 요약을 표시합니다.
 
 Key, Headers, Value 모두에서 동적 필드 사용 가능:
 
@@ -106,7 +134,7 @@ Key, Headers, Value 모두에서 동적 필드 사용 가능:
 
 Group 상세 화면에서 토픽·Partition별 committed offset, beginning/end offset, lag를 확인할 수 있습니다.
 
-Group 상세 화면의 **Offset Reset**에서 선택한 Partition을 네 가지 모드로 리셋할 수 있습니다:
+**Offset Reset**에서 선택한 Partition을 네 가지 모드로 리셋할 수 있습니다:
 
 - `Earliest` · `Latest` · `Timestamp` · `Specific offset`
 
@@ -116,7 +144,7 @@ Group 상세 화면의 **Offset Reset**에서 선택한 Partition을 네 가지 
 
 ## 서버 프로필
 
-각 프로필에는 Broker 주소, 선택적 SSL/TLS, 선택적 SASL/OAUTHBEARER, 선택적 Schema Registry 설정이 포함됩니다. 팝업의 **Test** 버튼으로 현재 입력값 기준 Kafka Admin 연결을 저장 없이 바로 확인할 수 있습니다.
+각 프로필에는 Broker 주소, 선택적 SSL/TLS, 선택적 SASL/OAUTHBEARER, 선택적 Schema Registry 설정이 포함됩니다. **Test** 버튼으로 저장 없이 현재 입력값 기준 Kafka Admin 연결을 바로 확인할 수 있습니다.
 
 ---
 
@@ -141,7 +169,6 @@ Group 상세 화면의 **Offset Reset**에서 선택한 Partition을 네 가지 
 
 ```bash
 npm ci
-npm run build
 npm run release:win
 ```
 
@@ -168,6 +195,7 @@ npm run release:mac
 - [macOS 사내 설치](docs/macos-install.md)
 - [Consume 필터](docs/consume-filters.md)
 - [Avro](docs/avro.md)
+- [고도화 로드맵](docs/enhancement-roadmap.md)
 - [프로젝트 구조](PROJECT_STRUCTURE.md)
 
 ---
