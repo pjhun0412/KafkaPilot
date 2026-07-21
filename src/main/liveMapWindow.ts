@@ -60,7 +60,13 @@ export async function openLiveMapWindow() {
     void writeAppLog("warn", "mapViewer.load", `Map Viewer load failed: ${errorCode} ${errorDescription} ${validatedURL}`);
   });
 
-  await liveMapWindow.loadFile(path.join(app.getAppPath(), "dist/renderer/map-viewer.html"));
+  // dev 모드에서는 Vite dev server에서 로드 (HMR 지원)
+  const devServerUrl = process.env.KAFKA_TOOL_DEV_SERVER_URL;
+  if (devServerUrl) {
+    await liveMapWindow.loadURL(`${devServerUrl}/map-viewer.html`);
+  } else {
+    await liveMapWindow.loadFile(path.join(app.getAppPath(), "dist/renderer/map-viewer.html"));
+  }
   flushLiveMapPoints();
 }
 

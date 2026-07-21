@@ -36,6 +36,7 @@ kafka-tool/
 │  ├─ preload/             Preload Bridge
 │  ├─ renderer/            React Renderer
 │  └─ shared/              공통 타입
+├─ AGENTS.md               AI coding agent 작업 지침
 ├─ CHANGELOG.md
 ├─ LICENSE
 ├─ README.md
@@ -284,6 +285,19 @@ src/renderer/stores/
 - 대량 Grid Virtualization
 - 한국어/영어 UI
 - GitHub Releases 기반 자동 업데이트
+
+## 문서
+
+- `README.md`: 영문 사용자 소개와 주요 기능
+- `README.ko.md`: 한국어 사용자 소개와 주요 기능
+- `CHANGELOG.md`: 릴리즈별 변경 이력
+- `PROJECT_STRUCTURE.md`: 현재 소스 구조와 책임
+- `AGENTS.md`: AI coding agent 작업 지침
+- `docs/consume-filters.md`: Consume 필터 문법
+- `docs/avro.md`: Avro, Schema Registry, 수동 스키마 사용법
+- `docs/enhancement-roadmap.md`: 구현 상태와 향후 고도화 후보
+- `docs/release.md`: 릴리즈 절차
+- `docs/macos-install.md`: macOS 사내 설치 안내
 
 ## 검증 명령
 
