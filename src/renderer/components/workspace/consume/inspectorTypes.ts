@@ -1,0 +1,37 @@
+import type { ConsumedMessage } from "../../../../shared/types";
+import type { MapFieldMapping } from "../../../mapPreview";
+import type { ReplayDraft, ReplayPayloadOptions, ReplayTargetServer } from "../../../replayTypes";
+import type { MessageInspectorMode, MessagePayloadFormat, MessagePayloadTarget, MessagePreviewEncoding, MessagePreviewMode } from "../../../uiTypes";
+
+export type MessageInspectorProps = {
+  serverId: string;
+  serverName: string;
+  replayTargets: ReplayTargetServer[];
+  mode: MessageInspectorMode;
+  previewTarget: MessagePayloadTarget;
+  previewMode: MessagePreviewMode;
+  valueFormat: MessagePayloadFormat;
+  previewEncoding: MessagePreviewEncoding;
+  search: string;
+  payload: unknown;
+  rawText: string;
+  valueText: string;
+  selectedMessage: ConsumedMessage | null;
+  selectedReplayMessages: ConsumedMessage[];
+  filteredReplayMessages: ConsumedMessage[];
+  allReplayMessages: ConsumedMessage[];
+  mapFieldMapping: MapFieldMapping | null;
+  valueColumnPaths: string[];
+  onMode: (mode: MessageInspectorMode) => void;
+  onPreviewTarget: (target: MessagePayloadTarget) => void;
+  onPreviewMode: (mode: MessagePreviewMode) => void;
+  onPreviewEncoding: (encoding: MessagePreviewEncoding) => void;
+  onSearch: (value: string) => void;
+  onApplyFilter: (value: string) => void;
+  onSendToProduce: (message: ConsumedMessage, targetTopic?: string, targetServerId?: string, payload?: ReplayPayloadOptions) => void;
+  onReplayMessage: (serverId: string, topic: string, draft: ReplayDraft) => Promise<void>;
+  onConnectReplayServer: (serverId: string) => Promise<boolean>;
+  onMapFieldMapping: (mapping: MapFieldMapping | null) => void;
+  onValueColumnPath: (path: string) => void;
+  onCollapse: () => void;
+};

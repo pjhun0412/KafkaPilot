@@ -1,256 +1,47 @@
-import type { Dispatch, SetStateAction } from "react";
-import { useEffect, useMemo, useState } from "react";
 import { Braces, Eye, Play, Save, Send, Square, Trash2 } from "lucide-react";
-import type { ManualAvroSchema, ProduceTemplatePreference } from "../../../../shared/types";
-import type { ProduceDraftOverride } from "../../../hooks/actions/useProduceActions";
-import { useAppLanguage } from "../../../hooks/state/useAppLanguage";
 import { t } from "../../../i18n";
 import {
   formatProduceElapsed,
-  getProduceTemplateExamples,
-  parseProduceDurationMs,
-  renderProduceTemplateDraft,
-  validateProduceTemplateDraft,
-  type ProduceIntervalRequest,
-  type ProduceTemplateDraft,
-  type ProduceTemplateIssue
+  getProduceTemplateExamples
 } from "../../../produceTemplate";
-import { parseProduceHeaders, validateJsonLikeValue } from "../../../utils";
-
-type ProduceIntervalConfig = ProduceTemplatePreference["intervalConfig"];
-
-export function ProducePanel(props: {
-  topic: string;
-  keyText: string;
-  headers: string;
-  value: string;
-  templates: ProduceTemplatePreference[];
-  hasAvroSchema: boolean;
-  avroEncoding?: ManualAvroSchema["encoding"];
-  onKey: (value: string) => void;
-  onHeaders: (value: string) => void;
-  onValue: (value: string) => void;
-  onTemplates: (templates: ProduceTemplatePreference[]) => void;
-  onProduce: () => void;
-  onProduceDraft: (draft: ProduceDraftOverride) => Promise<void>;
-  intervalConfig: ProduceIntervalConfig;
-  intervalState: {
-    error: string;
-    isRunning: boolean;
-    sentCount: number;
-    startedAt: number;
-  };
-  onIntervalConfig: Dispatch<SetStateAction<ProduceIntervalConfig>>;
-  onStartInterval: (request: ProduceIntervalRequest) => Promise<void>;
-  onStopInterval: () => void;
-}) {
-  const language = useAppLanguage();
-  const [intervalError, setIntervalError] = useState("");
-  const [isConfirmingInterval, setIsConfirmingInterval] = useState(false);
-  const [selectedTemplateId, setSelectedTemplateId] = useState("");
-  const [templateName, setTemplateName] = useState("");
-  const [templateMessage, setTemplateMessage] = useState("");
-  const [pendingDeleteTemplateId, setPendingDeleteTemplateId] = useState("");
-  const [isRenderedPreviewOpen, setIsRenderedPreviewOpen] = useState(false);
-  const { durationText, intervalMs, mode, stopMode, totalCount } = props.intervalConfig;
-
-  const draft = useMemo<ProduceTemplateDraft>(() => ({
-    key: props.keyText,
-    headers: props.headers,
-    value: props.value
-  }), [props.headers, props.keyText, props.value]);
-  const sortedTemplates = useMemo(
-    () => [...props.templates].sort((left, right) => right.updatedAt - left.updatedAt),
-    [props.templates]
-  );
-  const intervalPlan = useMemo(() => {
-    const delay = Math.max(100, Math.floor(intervalMs || 100));
-    const count = Math.max(1, Math.min(100000, Math.floor(totalCount || 1)));
-    const durationMs = parseProduceDurationMs(durationText);
-    const estimatedMax = stopMode === "count" ? count : durationMs > 0 ? Math.ceil(durationMs / delay) : 0;
-    return { count, delay, durationMs, estimatedMax };
-  }, [durationText, intervalMs, stopMode, totalCount]);
-  const isCountInvalid = !Number.isFinite(totalCount) || totalCount < 1 || totalCount > 100000;
-  const valueIssue = useMemo(() => {
-    return getJsonValueIssue(renderProduceTemplateDraft(draft, 1).value);
-  }, [draft]);
-  const renderedPreview = useMemo(
-    () => renderProduceTemplateDraft(draft, 1),
-    [draft]
-  );
-  const templateIssues = useMemo(() => validateProduceTemplateDraft(draft), [draft]);
-
-  useEffect(() => {
-    setIsConfirmingInterval(false);
-  }, [mode, props.topic]);
-
-  useEffect(() => {
-    if (!selectedTemplateId) return;
-    if (sortedTemplates.some((template) => template.id === selectedTemplateId)) return;
-    setSelectedTemplateId("");
-    setTemplateName("");
-  }, [selectedTemplateId, sortedTemplates]);
-
-  useEffect(() => {
-    if (!templateMessage) return;
-    const timer = window.setTimeout(() => setTemplateMessage(""), 1800);
-    return () => window.clearTimeout(timer);
-  }, [templateMessage]);
-
-  useEffect(() => {
-    if (!pendingDeleteTemplateId) return;
-    const timer = window.setTimeout(() => setPendingDeleteTemplateId(""), 3200);
-    return () => window.clearTimeout(timer);
-  }, [pendingDeleteTemplateId]);
-
-  useEffect(() => {
-    setIsRenderedPreviewOpen(false);
-  }, [props.topic]);
-
-  function updateIntervalConfig(patch: Partial<ProduceIntervalConfig>) {
-    props.onIntervalConfig((current) => ({ ...current, ...patch }));
-  }
-
-  function applyTemplate(templateId: string) {
-    setSelectedTemplateId(templateId);
-    const template = sortedTemplates.find((item) => item.id === templateId);
-    if (!template) {
-      setTemplateName("");
-      return;
-    }
-    props.onKey(template.draft.key);
-    props.onHeaders(template.draft.headers);
-    props.onValue(template.draft.value);
-    props.onIntervalConfig(template.intervalConfig);
-    setTemplateName(template.name);
-    setTemplateMessage(t(language, "produceTemplate.loaded", { name: template.name }));
-  }
-
-  function saveCurrentTemplate() {
-    const name = templateName.trim();
-    if (!props.topic) {
-      setTemplateMessage(t(language, "label.topicRequired"));
-      return;
-    }
-    if (!name) {
-      setTemplateMessage(t(language, "produceTemplate.nameRequired"));
-      return;
-    }
-    const now = Date.now();
-    const selectedTemplate = selectedTemplateId
-      ? sortedTemplates.find((item) => item.id === selectedTemplateId)
-      : undefined;
-    const duplicateTemplate = sortedTemplates.find((item) => item.name.trim().toLowerCase() === name.toLowerCase());
-    const existingId = selectedTemplate?.id ?? duplicateTemplate?.id ?? "";
-    const nextTemplate: ProduceTemplatePreference = {
-      id: existingId || createTemplateId(),
-      name,
-      draft,
-      intervalConfig: props.intervalConfig,
-      updatedAt: now
-    };
-    const withoutCurrent = props.templates.filter((item) => item.id !== nextTemplate.id);
-    props.onTemplates([...withoutCurrent, nextTemplate].sort((left, right) => right.updatedAt - left.updatedAt));
-    setSelectedTemplateId(nextTemplate.id);
-    setPendingDeleteTemplateId("");
-    setTemplateMessage(t(language, existingId ? "produceTemplate.updated" : "produceTemplate.saved", { name }));
-  }
-
-  function deleteSelectedTemplate() {
-    if (!selectedTemplateId) return;
-    const selected = sortedTemplates.find((item) => item.id === selectedTemplateId);
-    if (!selected) return;
-    if (pendingDeleteTemplateId !== selectedTemplateId) {
-      setPendingDeleteTemplateId(selectedTemplateId);
-      setTemplateMessage(t(language, "produceTemplate.deleteConfirm", { name: selected.name }));
-      return;
-    }
-    props.onTemplates(props.templates.filter((item) => item.id !== selectedTemplateId));
-    setSelectedTemplateId("");
-    setTemplateName("");
-    setPendingDeleteTemplateId("");
-    setTemplateMessage(t(language, "produceTemplate.deleted", { name: selected.name }));
-  }
-
-  async function startIntervalProduce() {
-    if (intervalMs < 100) {
-      setIntervalError("Every must be at least 100ms.");
-      return;
-    }
-    if (stopMode === "count" && isCountInvalid) {
-      setIntervalError("Count must be between 1 and 100,000.");
-      return;
-    }
-    if (stopMode === "duration" && intervalPlan.durationMs <= 0) {
-      setIntervalError("Duration must be like 30s, 5m, 1h, or 1m30s.");
-      return;
-    }
-    if (templateIssues.length > 0) {
-      setIntervalError(formatTemplateIssue(templateIssues[0], language));
-      return;
-    }
-    setIsConfirmingInterval(false);
-    setIntervalError("");
-    await props.onStartInterval({
-      count: intervalPlan.count,
-      draft,
-      durationText,
-      intervalMs: intervalPlan.delay,
-      stopMode
-    });
-  }
-
-  async function sendSingleProduce() {
-    if (templateIssues.length > 0) {
-      setIntervalError(formatTemplateIssue(templateIssues[0], language));
-      return;
-    }
-    const renderedDraft = renderProduceTemplateDraft(draft, 1);
-    const renderedValueIssue = getJsonValueIssue(renderedDraft.value);
-    if (renderedValueIssue) {
-      setIntervalError(`${renderedValueIssue.message} Check the rendered message. String tokens like \${date:yyyy-MM-dd HH:mm:ss} must be wrapped in quotes inside JSON.`);
-      return;
-    }
-    const headers = parseProduceHeaders(renderedDraft.headers);
-    if (typeof headers === "string") {
-      setIntervalError(headers);
-      return;
-    }
-    setIntervalError("");
-    await props.onProduceDraft(renderedDraft);
-  }
-
-  function requestIntervalStart() {
-    if (intervalMs < 100) {
-      setIntervalError("Every must be at least 100ms.");
-      return;
-    }
-    if (stopMode === "count" && isCountInvalid) {
-      setIntervalError("Count must be between 1 and 100,000.");
-      return;
-    }
-    if (stopMode === "duration" && intervalPlan.durationMs <= 0) {
-      setIntervalError("Duration must be like 30s, 5m, 1h, or 1m30s.");
-      return;
-    }
-    if (templateIssues.length > 0) {
-      setIntervalError(formatTemplateIssue(templateIssues[0], language));
-      return;
-    }
-    if (valueIssue) {
-      setIntervalError(`${valueIssue.message} Check the first rendered message. String tokens like \${date:yyyy-MM-dd HH:mm:ss} must be wrapped in quotes inside JSON.`);
-      return;
-    }
-    const renderedDraft = renderProduceTemplateDraft(draft, 1);
-    const headers = parseProduceHeaders(renderedDraft.headers);
-    if (typeof headers === "string") {
-      setIntervalError(headers);
-      return;
-    }
-    setIntervalError("");
-    setIsConfirmingInterval(true);
-  }
-
+import type { ProducePanelProps } from "./producePanelTypes";
+import { formatTemplateIssue, tryPrettyJson } from "./producePanelValidation";
+import { useProducePanelController } from "./useProducePanelController";
+import { useProduceTemplates } from "./useProduceTemplates";
+export function ProducePanel(props: ProducePanelProps) {
+  const controller = useProducePanelController(props);
+  const {
+    language,
+    intervalError,
+    isConfirmingInterval,
+    setIsConfirmingInterval,
+    isRenderedPreviewOpen,
+    setIsRenderedPreviewOpen,
+    durationText,
+    intervalMs,
+    mode,
+    stopMode,
+    totalCount,
+    intervalPlan,
+    valueIssue,
+    renderedPreview,
+    templateIssues,
+    updateIntervalConfig,
+    startIntervalProduce,
+    sendSingleProduce,
+    requestIntervalStart
+  } = controller;
+  const {
+    selectedTemplateId,
+    templateName,
+    setTemplateName,
+    templateMessage,
+    pendingDeleteTemplateId,
+    sortedTemplates,
+    applyTemplate,
+    saveCurrentTemplate,
+    deleteSelectedTemplate
+  } = useProduceTemplates(props, controller.draft);
   return (
     <section className="panel produce-panel">
       <div className="section-title">
@@ -287,16 +78,16 @@ export function ProducePanel(props: {
               </select>
             </label>
             {stopMode === "count" ? (
-            <label>
-              {t(language, "label.count")}
-              <input
-                type="number"
-                min={1}
-                max={100000}
-                value={totalCount}
-                onChange={(event) => updateIntervalConfig({ totalCount: Number(event.target.value) })}
-              />
-            </label>
+              <label>
+                {t(language, "label.count")}
+                <input
+                  type="number"
+                  min={1}
+                  max={100000}
+                  value={totalCount}
+                  onChange={(event) => updateIntervalConfig({ totalCount: Number(event.target.value) })}
+                />
+              </label>
             ) : (
               <label>
                 {t(language, "label.duration")}
@@ -495,55 +286,4 @@ export function ProducePanel(props: {
       )}
     </section>
   );
-}
-
-function createTemplateId() {
-  return crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function tryPrettyJson(value: string) {
-  try {
-    return JSON.stringify(JSON.parse(value), null, 2);
-  } catch {
-    return value;
-  }
-}
-
-function formatTemplateIssue(issue: ProduceTemplateIssue, language: ReturnType<typeof useAppLanguage>) {
-  const fieldKey = issue.field === "key" ? "label.key" : issue.field === "headers" ? "label.headers" : "label.value";
-  return `${t(language, fieldKey)} ${issue.token}: ${issue.message}`;
-}
-
-function getJsonValueIssue(value: string) {
-  const trimmed = value.trim();
-  if (!trimmed || (!trimmed.startsWith("{") && !trimmed.startsWith("["))) return null;
-  const validationMessage = validateJsonLikeValue(value);
-  if (!validationMessage) return null;
-  const position = getJsonErrorPosition(validationMessage);
-  if (position < 0) {
-    return { caretColumn: 0, column: 0, line: 0, message: validationMessage, snippet: "" };
-  }
-  const location = getTextLocation(value, position);
-  const lineText = value.split(/\r?\n/)[location.line - 1] ?? "";
-  return {
-    caretColumn: Math.max(0, location.column - 1),
-    column: location.column,
-    line: location.line,
-    message: validationMessage,
-    snippet: lineText
-  };
-}
-
-function getJsonErrorPosition(message: string) {
-  const match = /position (\d+)/i.exec(message);
-  return match ? Number(match[1]) : -1;
-}
-
-function getTextLocation(value: string, position: number) {
-  const prefix = value.slice(0, Math.max(0, position));
-  const lines = prefix.split(/\r?\n/);
-  return {
-    column: (lines[lines.length - 1]?.length ?? 0) + 1,
-    line: lines.length
-  };
 }

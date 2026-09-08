@@ -11,6 +11,9 @@
 
 ### Changed
 
+- Separate Consume selection, Value Columns, and map streaming; split Message Inspector views, Replay, and map settings into focused modules.
+- Separate Produce template management and publish controls; centralize replay batch preparation and interval configuration validation without changing IPC or settings formats.
+- Add regression coverage for replay preparation/routing, pane selection, map batching cleanup, interval confirmation, and template updates/deletion.
 - Redraw Map Viewer vehicles with colored top-view bodies, clear heading indicators, selection outlines, separate alert markers, and labels below each vehicle.
 - Require Renderer type checking in build and package/release commands.
 - Add regression tests for templates, split-pane routing, and Consumer Group Offset Reset.

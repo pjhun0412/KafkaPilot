@@ -235,6 +235,22 @@ src/renderer/hooks/app/controller/
 - `Record<string, any>` 같은 느슨한 wiring 타입은 피합니다.
 - Factory/helper는 실제로 파라미터 그룹화나 로직 분리가 있을 때만 추가합니다.
 
+## Workspace Consume / Produce 모듈
+
+`components/workspace/consume/`와 `produce/`는 화면, 상태·동작 hook, 순수 함수로 책임을 나눕니다. 외부에서 사용하는 `ConsumePanel`, `MessageInspector`, `ProducePanel` 진입점과 props는 유지합니다.
+
+| 영역 | 화면 | 상태·동작 | 순수 로직 / 타입 |
+| --- | --- | --- | --- |
+| Message Inspector | `MessageInspectorContent`, `MessageTreeNode` | `useInspectorTextSelection` | `inspectorTypes` |
+| Replay | `ReplayDialog` | `useInspectorReplay` | `prepareReplayDrafts`, `replayDrafts` |
+| Map 설정 | `InspectorMapDialog` | `useInspectorMap` | `inspectorFieldPaths` |
+| Consume | `ConsumePanel`, `ValueColumnsPicker` | `useConsumeMessageSelection`, `useConsumeValueColumns`, `useConsumeMapPoints` | `valueColumnTree`, `consumePanelTypes` |
+| Produce | `ProducePanel` | `useProducePanelController`, `useProduceTemplates` | `producePanelValidation`, `producePanelTypes` |
+
+각 pane에서 hook을 독립적으로 호출해 선택 상태와 설정의 수명을 유지합니다. Replay는 `prepareReplayDrafts`가 전체 배치를 검증한 후 `useInspectorReplay`에서 기존 `startReplayJob`에 전달합니다. 지도 실시간 전송의 250ms 배치·중복 방지·타이머 정리는 `useConsumeMapPoints`에 모았습니다.
+
+분리 근거와 검증 범위는 [Workspace 리팩토링 결정 기록](docs/decisions/2026-09-08-workspace-refactor.md)을 참고하세요.
+
 ## renderer/stores
 
 Zustand Store 영역입니다.

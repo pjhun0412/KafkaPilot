@@ -312,24 +312,18 @@ Avro 기능과 연결되는 schema 탐색 화면입니다.
 
 ## 리팩토링 우선순위
 
-최근 기능이 빠르게 추가되면서 일부 UI 컴포넌트가 커졌습니다. 새 기능 추가 전 다음 영역을 먼저 정리하는 것을 권장합니다.
+2026-09-08에 다음 구조 분리를 적용했습니다. 세부 내용과 검증 범위는 [결정 기록](decisions/2026-09-08-workspace-refactor.md)에 있습니다.
 
-1. `MessageInspector.tsx`
-   - Replay dialog/action
-   - viewer mode rendering
-   - field picker
-   - map action
-   - copy/export action
-2. `ConsumePanel.tsx`
-   - toolbar state
-   - grid selection
-   - paging/filter/viewer composition
-3. `ProducePanel.tsx`
-   - template CRUD
-   - interval start confirmation
-   - preview validation
-4. Workspace refresh/navigation hooks
-   - server/topic/group refresh 분기 명확화
+- `MessageInspector`: Replay dialog/action, viewer mode rendering, map 설정/action, 텍스트 선택 hook 분리
+- `ConsumePanel`: grid selection, Value Columns, 실시간 지도 전송 분리
+- `ProducePanel`: template CRUD, 발행 controller, 반복 발행 검증 분리
+- Replay 전체 배치 준비·검증을 UI와 분리하고 회귀 테스트 추가
+
+후속 후보:
+
+1. Workspace refresh/navigation hooks의 server/topic/group refresh 분기 명확화
+2. Consume의 paging/filter/viewer 조합은 관련 기능을 확장할 때 추가 분리 검토
+3. Replay dialog의 입력 영역은 새 옵션을 추가할 때 독립 컴포넌트 분리 검토
 
 ## 릴리즈 단위 제안
 
