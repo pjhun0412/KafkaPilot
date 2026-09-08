@@ -242,7 +242,16 @@ Zustand Store 영역입니다.
 ```text
 src/renderer/stores/
 ├─ domain/
-│  └─ serverClusterStore.ts
+│  ├─ brokerResourceStore.ts
+│  ├─ consumerGroupResourceStore.ts
+│  ├─ consumeStateStore.ts
+│  ├─ kafkaNavigationStore.ts
+│  ├─ kafkaPreferenceStore.ts
+│  ├─ kafkaStreamingStore.ts
+│  ├─ produceDraftStore.ts
+│  ├─ serverClusterStore.ts
+│  ├─ storeUtils.ts
+│  └─ topicResourceStore.ts
 └─ ui/
    ├─ feedbackStore.ts
    ├─ layoutStore.ts
@@ -258,7 +267,8 @@ src/renderer/stores/
 
 현재 역할:
 
-- `serverClusterStore`: 서버 목록, 선택 서버, 클러스터 리소스 상태
+- `serverClusterStore`: 서버 목록, 선택 서버, 연결 상태, 열린 클러스터
+- 도메인별 Store: Broker/Topic/Consumer Group 리소스, 탐색, Consume 상태, Streaming, Produce 초안, Kafka 환경설정
 - `feedbackStore`: Toast, Status, 연결 에러
 - `layoutStore`: Sidebar, Split, Viewer 크기
 - `workspacePaneStore`: Primary/Split Pane 상태
@@ -298,11 +308,13 @@ src/renderer/stores/
 - `docs/enhancement-roadmap.md`: 구현 상태와 향후 고도화 후보
 - `docs/release.md`: 릴리즈 절차
 - `docs/macos-install.md`: macOS 사내 설치 안내
+- [문서·소스 분석 및 수정 기록](docs/codebase-analysis-2026-09-06.md)
 
 ## 검증 명령
 
 ```bash
+npm test
 npm run build
 ```
 
-빌드는 TypeScript Electron 프로젝트 검사와 Vite production build를 함께 수행합니다.
+빌드는 Renderer 타입 검사, TypeScript Electron 프로젝트 검사·컴파일, Vite production build를 함께 수행합니다. `npm test`는 Node.js 내장 테스트 실행기로 템플릿, Split Pane 콜백, Consumer Group Reset 회귀를 검증합니다. 테스트는 실제 Kafka에 연결하지 않습니다.

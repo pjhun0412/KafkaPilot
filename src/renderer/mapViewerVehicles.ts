@@ -47,11 +47,19 @@ export function createVehicleIcon(point: LiveMapPoint, selected: boolean, alerte
     html: `
       <div class="vehicle-marker ${headingClass} ${selectedClass} ${alertClass}" style="--marker-color:${color}; --heading:${heading}deg">
         <div class="vehicle-marker-body">
-          <svg class="vehicle-marker-svg" viewBox="0 0 48 88" aria-hidden="true">
-            <path class="vehicle-body-shape" d="M24 2c-9.3 0-15.8 5.7-17.1 15L3.3 43.6c-.4 3-.4 6.1 0 9.1L6.9 71C8.2 80.3 14.7 86 24 86s15.8-5.7 17.1-15l3.6-18.3c.6-3 .6-6.1 0-9.1L41.1 17C39.8 7.7 33.3 2 24 2Z" />
-            <path class="vehicle-glass" d="M11.2 19.4c1.2-5.3 4.6-8.1 10.2-8.5l-1.8 8.4c-.4 1.8-1.8 3.1-3.6 3.5l-5.6 1.2.8-4.6Zm25.6 0-.8 4.6-5.6-1.2c-1.8-.4-3.2-1.7-3.6-3.5L25 10.9c5.6.4 9 3.2 10.2 8.5Z" />
-            <path class="vehicle-glass" d="M12.3 37.1c6.6-2.1 17.1-2.1 23.4 0l-2.3 12.8c-5.3-2.2-13.7-2.2-18.8 0l-2.3-12.8Zm2.1 29.7c5.1 2.3 14.1 2.3 19.2 0l-1.6 8c-.8 4.1-3.6 6.3-8 6.3s-7.2-2.2-8-6.3l-1.6-8Z" />
-            <path class="vehicle-shadow-shape" d="M8.9 29.3c3.7-1.7 8.9-2.6 15.1-2.6s11.4.9 15.1 2.6l.9 6.6c-4.5-2.3-10-3.4-16-3.4S12.5 33.6 8 35.9l.9-6.6Zm-.4 29.3c4.8 2.2 10 3.3 15.5 3.3s10.7-1.1 15.5-3.3l-1.1 5.4c-4.2 2.4-9 3.6-14.4 3.6S13.8 66.4 9.6 64l-1.1-5.4Z" />
+          <svg class="vehicle-marker-svg" viewBox="0 0 40 72" aria-hidden="true">
+            <path class="vehicle-direction" d="m15 7 5-4 5 4" />
+            <g class="vehicle-wheels">
+              <rect x="6" y="24" width="5" height="10" rx="2" />
+              <rect x="29" y="24" width="5" height="10" rx="2" />
+              <rect x="6" y="49" width="5" height="10" rx="2" />
+              <rect x="29" y="49" width="5" height="10" rx="2" />
+            </g>
+            <path class="vehicle-body-shape" d="M15 14h10c4 0 6 4 6 9v36c0 4-2 6-6 6H15c-4 0-6-2-6-6V23c0-5 2-9 6-9Z" />
+            <path class="vehicle-glass" d="m13 29 2-7h10l2 7-2 6H15Zm2 21h10l2 7H13Z" />
+            <rect class="vehicle-roof" x="14" y="36" width="12" height="12" rx="2" />
+            <path class="vehicle-lights" d="M12 19h4m8 0h4" />
+            <path class="vehicle-tail-lights" d="M12 61h4m8 0h4" />
           </svg>
         </div>
         <div class="vehicle-marker-label">${escapeHtml(point.label || point.id)}</div>

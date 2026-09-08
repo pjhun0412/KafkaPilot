@@ -154,7 +154,7 @@ function getTokenIssue(token: string) {
   if (normalizedKind === "uuid") {
     return expression ? "Use ${uuid} without options." : "";
   }
-  return `Unknown dynamic field: ${kind.trim() || token}.`;
+  return `Unknown dynamic field: ${normalizedKind || token}.`;
 }
 
 function formatPadded(value: number, pad: number) {

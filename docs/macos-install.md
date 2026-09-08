@@ -36,7 +36,7 @@ If macOS blocks the first launch, use:
 If it is still blocked, remove the quarantine flag:
 
 ```bash
-xattr -dr com.apple.quarantine /Applications/Kafka\ Tool.app
+xattr -dr com.apple.quarantine /Applications/KafkaPilot.app
 ```
 
 ## Updates

@@ -19,9 +19,10 @@ Update the package version before a release:
 npm version x.y.z --no-git-tag-version
 ```
 
-Verify the build:
+Run regression tests and verify the build (including Renderer, Main, and Preload type checking):
 
 ```bash
+npm test
 npm run build
 ```
 

@@ -11,7 +11,7 @@ type PrimaryTopicTabActionsParams = Parameters<typeof usePrimaryTopicTabAppActio
 export type WorkspaceControllerInteractionsParams = {
   consume: ConsumeRefreshActionsParams["selectedConsume"] & ConsumeRefreshActionsParams["workspaceRefresh"];
   manualAvro: ManualAvroSchemaParams;
-  quickSearch: QuickSearchActionsParams["actions"] & QuickSearchActionsParams["shortcuts"] & {
+  quickSearch: QuickSearchActionsParams["actions"] & Omit<QuickSearchActionsParams["shortcuts"], "closeActiveTopicTab"> & {
     closeSplitTopicTab: (topic: string) => Promise<void>;
   };
   topicTabs: PrimaryTopicTabActionsParams;

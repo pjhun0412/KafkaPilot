@@ -7,7 +7,8 @@
   "main": "dist/main/main.js",
   "scripts": {
     "dev": "concurrently -k \"vite\" \"tsc -p tsconfig.electron.json --watch\" \"wait-on dist/main/main.js http://localhost:5173 && node scripts/start-electron.cjs --dev\"",
-    "build": "tsc -p tsconfig.electron.json && vite build",
+    "build": "tsc --noEmit && tsc -p tsconfig.electron.json && vite build",
+    "test": "node --test tests/*.test.cjs",
     "package:win": "npm run build && electron-builder --win",
     "package:mac": "npm run build && electron-builder --mac",
     "release:win": "npm run build && electron-builder --win --publish always",

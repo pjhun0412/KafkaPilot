@@ -1,4 +1,5 @@
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
+import type { ProduceTemplatePreference } from "../../../../../shared/types";
 import type { WorkspaceControllerPanesParams } from "../workspaceControllerPaneTypes";
 
 export function createSplitPaneComposition(params: WorkspaceControllerPanesParams) {
@@ -141,7 +142,7 @@ export function createSplitPaneComposition(params: WorkspaceControllerPanesParam
       produceKey: splitProduceDraft.key,
       produceHeaders: splitProduceDraft.headers,
       produceValue: splitProduceDraft.value,
-      onProduceTemplates: (templates) => setProduceTemplatesByServer((current) => ({
+      onProduceTemplates: (templates: ProduceTemplatePreference[]) => setProduceTemplatesByServer((current) => ({
         ...current,
         [visibleSplitPane.serverId]: {
           ...(current[visibleSplitPane.serverId] ?? {}),

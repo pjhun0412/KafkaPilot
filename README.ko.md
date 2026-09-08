@@ -139,7 +139,7 @@ Group 상세 화면에서 토픽·Partition별 committed offset, beginning/end o
 
 - `Earliest` · `Latest` · `Timestamp` · `Specific offset`
 
-리셋 플로우는 세 단계: Partition 선택 → 미리보기 실행(Partition별 target offset과 diff 표시) → `RESET` 타이핑 후 확인. Consumer Group이 활성 상태면 실행이 차단됩니다.
+리셋 플로우는 세 단계: Partition 선택 → 미리보기 실행(Partition별 target offset과 diff 표시) → `RESET` 타이핑 후 확인. Consumer Group이 활성 상태이거나 상태를 확인할 수 없으면 실행이 차단됩니다.
 
 ---
 
@@ -170,14 +170,14 @@ Group 상세 화면에서 토픽·Partition별 committed offset, beginning/end o
 
 ```bash
 npm ci
-npm run release:win
+npm run package:win
 ```
 
 **macOS** *(macOS에서 실행해야 합니다)*
 
 ```bash
 npm ci
-npm run release:mac
+npm run package:mac
 ```
 
 ---

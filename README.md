@@ -139,7 +139,7 @@ Group detail shows committed offsets, beginning and end offsets, and lag by topi
 
 - `Earliest` · `Latest` · `Timestamp` · `Specific offset`
 
-The reset flow requires three steps: select partitions → run preview (shows target offsets and diff per partition) → type `RESET` to confirm. Execution is blocked while the Consumer Group has active members.
+The reset flow requires three steps: select partitions → run preview (shows target offsets and diff per partition) → type `RESET` to confirm. Execution is blocked while the Consumer Group has active members or its state cannot be verified.
 
 ---
 
@@ -170,14 +170,14 @@ All shortcuts can be rebound in `Preferences > Editor > Shortcuts`.
 
 ```bash
 npm ci
-npm run release:win
+npm run package:win
 ```
 
 **macOS** *(must run on a Mac)*
 
 ```bash
 npm ci
-npm run release:mac
+npm run package:mac
 ```
 
 ---

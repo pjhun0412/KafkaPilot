@@ -640,7 +640,7 @@ function upsertVehicle(point: LiveMapPoint) {
     opacity: trailsVisible ? 0.72 : 0
   }).addTo(map);
 
-  const vehicle = { point, marker, trail, polyline, alertSegments: [], alerts, alertCount: alerts.length };
+  const vehicle: VehicleState = { point, marker, trail, polyline, alertSegments: [], alerts, alertCount: alerts.length };
   pushAlertEvent(point, alerts);
   vehicle.lastHeading = getPointHeading(point);
   vehicle.lastPointAt = Date.now();

@@ -244,29 +244,14 @@ body,
 
 .vehicle-marker-body {
   position: absolute;
-  left: -12px;
-  top: -22px;
-  width: 24px;
-  height: 44px;
-  border-radius: 12px;
-  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, .42));
+  left: -14px;
+  top: -28px;
+  width: 28px;
+  height: 50px;
   transform: rotate(var(--heading, 0deg));
   transition: transform 220ms ease-out;
-  transform-origin: 50% 50%;
-}
-
-.vehicle-marker:not(.has-heading) .vehicle-marker-body {
-  left: -8px;
-  top: -8px;
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  background: var(--marker-color, #38bdf8);
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 6px color-mix(in srgb, var(--marker-color, #38bdf8) 24%, transparent), 0 8px 18px rgba(0, 0, 0, .42);
-}
-
-.vehicle-marker:not(.has-heading) .vehicle-marker-svg {
-  display: none;
+  transform-origin: 50% 56%;
+  filter: drop-shadow(0 1px 1px rgba(15, 23, 42, .25));
 }
 
 .vehicle-marker-svg {
@@ -277,58 +262,129 @@ body,
 }
 
 .vehicle-body-shape {
-  fill: #050505;
-  stroke: var(--marker-color, #38bdf8);
-  stroke-width: 2.5;
+  fill: var(--marker-color, #38bdf8);
+  stroke: #ffffff;
+  stroke-width: 2;
+  paint-order: stroke fill;
+}
+
+.vehicle-wheels {
+  fill: #263442;
+  stroke: #ffffff;
+  stroke-width: 1;
 }
 
 .vehicle-glass {
-  fill: #f8fafc;
+  fill: #233747;
+  stroke: #172b3a;
+  stroke-width: .6;
 }
 
-.vehicle-shadow-shape {
-  fill: #020617;
+.vehicle-roof {
+  fill: #ffffff;
   fill-opacity: .24;
-}
-
-.vehicle-marker.selected .vehicle-marker-body {
-  filter: drop-shadow(0 0 0 #ffffff) drop-shadow(0 0 7px rgba(74, 158, 255, .72)) drop-shadow(0 10px 18px rgba(0, 0, 0, .52));
-}
-
-.vehicle-marker.selected .vehicle-body-shape {
   stroke: #ffffff;
-  stroke-width: 3.5;
+  stroke-opacity: .35;
+  stroke-width: .8;
 }
 
-.vehicle-marker.alerted .vehicle-marker-body {
-  filter: drop-shadow(0 0 0 #fbbf24) drop-shadow(0 0 8px rgba(245, 158, 11, .75)) drop-shadow(0 10px 18px rgba(0, 0, 0, .52));
+.vehicle-direction {
+  fill: none;
+  stroke: #263442;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.vehicle-marker.alerted .vehicle-body-shape {
-  stroke: #fbbf24;
-  stroke-width: 3.5;
+.vehicle-lights,
+.vehicle-tail-lights {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 
-.vehicle-marker.alerted.danger .vehicle-body-shape {
-  stroke: #ef4444;
+.vehicle-tail-lights {
+  stroke: #9f2433;
+}
+
+.vehicle-marker:not(.has-heading) .vehicle-marker-body {
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--marker-color, #38bdf8);
+}
+
+.vehicle-marker:not(.has-heading) .vehicle-marker-svg {
+  display: none;
+}
+
+.vehicle-marker.selected::before {
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: -25px;
+  width: 50px;
+  height: 50px;
+  border: 1.5px solid #334155;
+  border-radius: 50%;
+  outline: 2px solid rgba(255, 255, 255, .9);
+  pointer-events: none;
+}
+
+.vehicle-marker.alerted::after {
+  content: "!";
+  position: absolute;
+  left: 14px;
+  top: -27px;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+  background: #fbbf24;
+  color: #422006;
+  font: 800 11px/1 Inter, sans-serif;
+  pointer-events: none;
+}
+
+.vehicle-marker.alerted.danger::after {
+  background: #dc2626;
+  color: #ffffff;
 }
 
 .vehicle-marker-label {
   position: absolute;
-  left: 14px;
-  top: -13px;
+  left: 0;
+  top: 30px;
+  transform: translateX(-50%);
   max-width: 180px;
-  padding: 3px 6px;
-  border-radius: 5px;
-  background: rgba(20, 24, 29, .88);
-  color: #ffffff;
-  font-size: 11px;
-  line-height: 1.2;
+  padding: 2px 5px;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #263442;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: .92;
   pointer-events: none;
+}
+
+.vehicle-marker:not(.has-heading):not(.selected) .vehicle-marker-label {
+  top: 13px;
+}
+
+.vehicle-marker.selected .vehicle-marker-label {
+  border-color: #263442;
+  background: #263442;
+  color: #ffffff;
 }
 
 .map-popup {

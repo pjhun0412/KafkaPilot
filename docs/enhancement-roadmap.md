@@ -15,6 +15,7 @@ KafkaPilot의 제품 방향은 단순 Kafka 조회 도구가 아니라 운영, �
 - Map Viewer: 독립 지도 창, 좌표 필드 매핑, WGS84/Korea TM/UTM 변환, 차량 마커, Trail, Follow 모드, Outlier 설정/표시
 - Avro: Schema Registry 기반 Confluent wire-format decode, 수동 토픽 스키마 등록, 수동 schema 기반 produce encode
 - Workspace: Split Pane, Quick Search, 한국어/영어 UI, 단축키 커스터마이징
+- Dynamic Template 시간 보정: date/timestamp/now의 `offset` 옵션 (예: `${timestamp|offset=+1h}`, `${date:yyyy-MM-dd|offset=-3d}`)
 
 ## 권장 우선순위
 
@@ -161,7 +162,6 @@ Consume한 메시지 샘플에서 Value 필드 통계를 계산합니다.
 - `${partition}`
 - `${previous:path}`
 - `${jsonpath:path}` replay 원본값 참조
-- offset이 적용된 date/timestamp 확장
 
 ### Avro/Schema-aware Produce Form
 

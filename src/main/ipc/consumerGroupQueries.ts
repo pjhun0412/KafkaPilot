@@ -59,9 +59,12 @@ export async function resetConsumerGroupOffsets(request: ConsumerGroupOffsetRese
   if (partitions.length === 0) throw new Error("At least one partition is required.");
 
   return withAdmin(request.serverId, async (admin) => {
-    const describedGroups = await admin.describeGroups([groupId]).catch(() => ({ groups: [] }));
-    const group = describedGroups.groups[0];
-    const state = (group?.state ?? "").toLowerCase();
+    const describedGroups = await admin.describeGroups([groupId]);
+    const group = describedGroups.groups.find((item) => item.groupId === groupId);
+    if (!group || !group.state) {
+      throw new Error("Unable to verify consumer group state. Offsets were not reset.");
+    }
+    const state = group.state.toLowerCase();
     await writeAppLog("info", "kafka.consumerGroupReset", "Consumer group state resolved.", {
       groupId,
       members: group?.members.length ?? 0,

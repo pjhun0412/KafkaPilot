@@ -1,4 +1,5 @@
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
+import type { ProduceTemplatePreference } from "../../../../../shared/types";
 import type { WorkspaceControllerPanesParams } from "../workspaceControllerPaneTypes";
 
 export function createPrimaryPaneComposition(params: WorkspaceControllerPanesParams) {
@@ -185,7 +186,7 @@ export function createPrimaryPaneComposition(params: WorkspaceControllerPanesPar
       produceKey: selectedProduceDraft.key,
       produceHeaders: selectedProduceDraft.headers,
       produceValue: selectedProduceDraft.value,
-      onProduceTemplates: (templates) => setProduceTemplatesByServer((current) => ({
+      onProduceTemplates: (templates: ProduceTemplatePreference[]) => setProduceTemplatesByServer((current) => ({
         ...current,
         [selectedServerId]: {
           ...(current[selectedServerId] ?? {}),

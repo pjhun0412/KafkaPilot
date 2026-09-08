@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Return validation messages for unknown Dynamic Field tokens instead of throwing a ReferenceError.
+- Forward topic activation when moving a message to Produce on another topic in the split pane.
+- Stop Consumer Group Offset Reset when group state lookup fails or the requested group state is missing.
+- Fix Renderer type errors in controller inputs, Produce template callbacks, and Map Viewer vehicle state.
+
+### Changed
+
+- Redraw Map Viewer vehicles with colored top-view bodies, clear heading indicators, selection outlines, separate alert markers, and labels below each vehicle.
+- Require Renderer type checking in build and package/release commands.
+- Add regression tests for templates, split-pane routing, and Consumer Group Offset Reset.
+- Align local packaging instructions, macOS app paths, store documentation, and template roadmap status with the implementation.
+
 ## 2.0.7
 
 ### Changed

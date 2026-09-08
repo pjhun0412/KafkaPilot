@@ -148,6 +148,7 @@ export function useSplitPaneCallbacks({
     ...createSplitConsumeCallbacks({
       pane,
       consumeState,
+      activateSplitTopic,
       updateConsumeStateFor,
       moveOffsetPageFor,
       startConsumeFor,
