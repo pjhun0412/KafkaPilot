@@ -5,6 +5,7 @@ import type { AppLanguage } from "../../../i18n";
 import { t } from "../../../i18n";
 import { collectMessageValuePaths, normalizeValueColumnPaths } from "../../../consumeValuePaths";
 import { createLiveMapPoint } from "../../../mapPreview";
+import { formatMessagePayload } from "../../../utils";
 import type { MapFieldMapping } from "../../../mapPreview";
 import type { ReplayDraft, ReplayPayloadOptions, ReplayTargetServer } from "../../../replayTypes";
 import type { ConsumeFilterField, ConsumeFilterMode, ConsumeMode, MessageInspectorMode, MessagePayloadTarget, MessagePreviewEncoding, MessagePreviewMode, OffsetOrder, TopicConsumeState } from "../../../uiTypes";
@@ -269,7 +270,7 @@ function ConsumePanelView(props: ConsumePanelProps) {
     const latestKey = `${latestMessage.topic}:${latestMessage.partition}:${latestMessage.offset}:${latestMessage.timestamp}:${mapFieldMappingKey}`;
     if (latestKey === lastSentLiveMapMessageRef.current) return;
     lastSentLiveMapMessageRef.current = latestKey;
-    const point = createLiveMapPoint(latestMessage, undefined, undefined, props.mapFieldMapping);
+    const point = createLiveMapPoint(latestMessage, formatMessagePayload(latestMessage), undefined, props.mapFieldMapping) ?? createLiveMapPoint(latestMessage);
     if (!point) return;
     pendingLiveMapPointsRef.current.push(point);
     if (liveMapFlushTimerRef.current !== null) return;

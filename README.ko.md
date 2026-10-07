@@ -13,7 +13,7 @@
 
 [English](README.md) &nbsp;·&nbsp; [변경 이력](CHANGELOG.md) &nbsp;·&nbsp; [문서](docs/)
 
-![Version](https://img.shields.io/badge/version-2.0.7-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0.8-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
 
 [![PayPal](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://www.paypal.com/ncp/payment/R6DBD3HSJ9TPE)
 
@@ -53,11 +53,13 @@ Kafka를 활용한 애플리케이션을 개발하는 **개발자**를 위한 �
 웹 대시보드가 아직 준비되지 않은 상황에서 좌표 데이터가 정상적으로 들어오는지 확인해야 할 때, Map Viewer로 몇 초 안에 라이브 시각화를 시작할 수 있습니다.
 
 - 커스텀 JSON 경로 지정을 위한 **토픽별 Field Mapping** (위도, 경도, heading, 속도, 차량 ID)
-- **좌표 변환**: WGS84 degree, WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
+- **좌표 변환**: WGS84 degree, WGS84 정수 좌표 (E6, ÷1,000,000), WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
 - **Heading 반영 회전** 차량 마커와 부드러운 이동 보간
 - 차량별 최근 이동 경로 **Trail**
 - **Follow 모드** — 선택 차량 카메라 고정, auto-fit, free-move 지원
 - 속도 표시 `km/h` 또는 `m/s`
+
+`currentLat: 37757309`, `currentLng: 128905820`처럼 위경도를 100만 배 정수로 저장한 메시지는 **Map 설정 → 좌표계 → WGS84 정수 좌표 (÷1,000,000)**를 선택합니다. `Y/Lat`에 `currentLat`, `X/Lng`에 `currentLng` 필드를 지정하면 `37.757309, 128.905820`으로 표시됩니다. 좌표계와 필드 매핑은 토픽별로 저장됩니다.
 
 ---
 

@@ -13,7 +13,7 @@ No server setup. Install, connect, and start working with Kafka in seconds.
 
 [한국어](README.ko.md) &nbsp;·&nbsp; [Changelog](CHANGELOG.md) &nbsp;·&nbsp; [Docs](docs/)
 
-![Version](https://img.shields.io/badge/version-2.0.7-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0.8-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
 
 [![PayPal](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://www.paypal.com/ncp/payment/R6DBD3HSJ9TPE)
 
@@ -53,11 +53,13 @@ A dedicated window for Kafka topics that carry location data. Open it from any c
 When your web dashboard isn't ready yet and you need to verify that coordinate data is flowing correctly, Map Viewer gives you a live visual in seconds — no extra setup required.
 
 - Per-topic **field mapping** for custom JSON paths (latitude, longitude, heading, speed, vehicle ID)
-- **Coordinate conversion**: WGS84 degree, WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
+- **Coordinate conversion**: WGS84 degree, WGS84 integer coordinates (E6, ÷1,000,000), WGS84 millisecond, Korea TM (EPSG:5186), UTM Zone 52N
 - Vehicle markers with **heading-aware rotation** and smooth movement interpolation
 - **Trails** showing recent movement history per vehicle
 - **Follow mode** locks the camera to a selected vehicle; auto-fit and free-move also available
 - Speed display in `km/h` or `m/s`
+
+For coordinates stored as degrees multiplied by one million, such as `currentLat: 37757309` and `currentLng: 128905820`, select **Map Settings → CRS → WGS84 integer coordinates (÷1,000,000)**. Map `Y/Lat` to `currentLat` and `X/Lng` to `currentLng` to display `37.757309, 128.905820`. The coordinate format and field mapping are saved per topic.
 
 ---
 

@@ -43,6 +43,8 @@ headers.traceId exists
 
 Consume can display Key and Value as `Text`, `JSON`, `Hex`, or `Base64`.
 
+The full-message Raw/Tree inspector preserves Key as its received text, even when it looks like a JSON number, boolean, or object. For example, `2522026100715025500` remains the exact string `"2522026100715025500"`; it is not converted to a JavaScript number. Value JSON parsing is unchanged.
+
 Filtering works against the displayed message data in the renderer. For large raw payloads, KafkaPilot keeps only a fixed amount of raw bytes per message to protect memory. If a payload exceeds that raw-byte limit, Hex/Base64-only inspection may show a retained-bytes warning.
 
 ## Export

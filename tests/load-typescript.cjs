@@ -11,7 +11,8 @@ module.exports = function loadTypeScript(file, mocks = {}, cache = new Map()) {
   const module = { exports: {} };
   cache.set(filename, module);
   const output = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 }
+    fileName: filename,
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.React, esModuleInterop: true }
   }).outputText;
   const nativeRequire = createRequire(filename);
   const requireSource = (specifier) => {

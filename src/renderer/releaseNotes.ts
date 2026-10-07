@@ -11,6 +11,62 @@ export type ReleaseNote = {
 };
 
 export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
+  "2.0.8": {
+    ko: {
+      title: "KafkaPilot 2.0.8",
+      sections: [
+        {
+          heading: "메시지 Key 원문 보존",
+          items: [
+            "메시지 상세 보기에서 큰 숫자나 앞에 0이 붙은 Key도 Kafka에서 받은 문자열 그대로 표시합니다."
+          ]
+        },
+        {
+          heading: "Map Viewer",
+          items: [
+            "Map 설정에 WGS84 정수 좌표(÷1,000,000)를 추가했습니다. 37757309, 128905820과 같은 좌표를 사용할 수 있습니다.",
+            "저장된 좌표 필드 경로를 실시간 수신 메시지에도 적용하도록 수정했습니다.",
+            "차량 마커의 색상, 진행 방향, 선택 표시, 경고 표시와 이름표를 개선했습니다."
+          ]
+        },
+        {
+          heading: "버그 수정",
+          items: [
+            "잘못된 Dynamic Field 토큰을 사용하면 검증 오류를 표시하도록 수정했습니다.",
+            "분할 화면에서 다른 토픽의 Produce로 메시지를 보낼 때 대상 토픽이 활성화되도록 수정했습니다.",
+            "Consumer Group 상태를 확인할 수 없으면 Offset Reset을 중단하도록 수정했습니다."
+          ]
+        }
+      ]
+    },
+    en: {
+      title: "KafkaPilot 2.0.8",
+      sections: [
+        {
+          heading: "Original message keys",
+          items: [
+            "Message details preserve keys as the original strings received from Kafka, including large integers and leading zeros."
+          ]
+        },
+        {
+          heading: "Map Viewer",
+          items: [
+            "Added WGS84 integer coordinates (÷1,000,000) to Map settings for inputs such as 37757309, 128905820.",
+            "Fixed saved coordinate field paths not being applied to incoming live messages.",
+            "Improved vehicle marker colors, heading indicators, selection outlines, alerts, and labels."
+          ]
+        },
+        {
+          heading: "Bug fixes",
+          items: [
+            "Invalid Dynamic Field tokens now produce validation errors.",
+            "Moving a message to Produce on another topic in the split pane now activates the target topic.",
+            "Consumer Group Offset Reset now stops when the group state cannot be verified."
+          ]
+        }
+      ]
+    }
+  },
   "2.0.7": {
     ko: {
       title: "KafkaPilot 2.0.7",

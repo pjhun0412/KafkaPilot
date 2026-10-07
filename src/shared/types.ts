@@ -227,7 +227,7 @@ export type AppPreferences = {
       mapFieldMapping?: {
         xPath: string;
         yPath: string;
-        projection: "wgs84" | "wgs84_msec" | "korea_grs80_central" | "korea_itrf2000_central" | "utm52n";
+        projection: "wgs84" | "wgs84_e6" | "wgs84_msec" | "korea_grs80_central" | "korea_itrf2000_central" | "utm52n";
         identityPath?: string;
         headingPath?: string;
         speedPath?: string;

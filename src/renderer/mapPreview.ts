@@ -9,6 +9,7 @@ export type MapCoordinate = {
 
 export type MapProjection =
   | "wgs84"
+  | "wgs84_e6"
   | "wgs84_msec"
   | "korea_grs80_central"
   | "korea_itrf2000_central"
@@ -71,7 +72,8 @@ const latitudeKeys = new Set([
 ]);
 
 function normalizeMapProjection(value: unknown): MapProjection {
-  return value === "wgs84_msec"
+  return value === "wgs84_e6"
+    || value === "wgs84_msec"
     || value === "korea_grs80_central"
     || value === "korea_itrf2000_central"
     || value === "utm52n"
@@ -150,13 +152,18 @@ function isUtmLikeCoordinate(x: number, y: number) {
   return Number.isFinite(x) && Number.isFinite(y) && x > 100000 && x < 900000 && y > 0 && y < 10000000;
 }
 
-const projectedMapDefinitions: Record<Exclude<MapProjection, "wgs84" | "wgs84_msec">, string> = {
+const projectedMapDefinitions: Record<Exclude<MapProjection, "wgs84" | "wgs84_e6" | "wgs84_msec">, string> = {
   korea_grs80_central: "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs",
   korea_itrf2000_central: "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs",
   utm52n: "+proj=utm +zone=52 +datum=WGS84 +units=m +no_defs"
 };
 
 function projectedToWgs84(x: number, y: number, projection: MapProjection): MapCoordinate | null {
+  if (projection === "wgs84_e6") {
+    const lat = y / 1000000;
+    const lng = x / 1000000;
+    return isValidCoordinate(lat, lng) ? { lat, lng } : null;
+  }
   if (projection === "wgs84_msec") {
     const lat = y / 3600000;
     const lng = x / 3600000;

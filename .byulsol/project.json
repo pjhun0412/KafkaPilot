@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "server_alias": "home",
+  "instance_id": "a62d3037-203c-4d25-a419-5a4e36d7181a",
+  "project_id": "b3e4df3d-ed1d-4606-85cc-46f7b9c62d49",
+  "default_environment": "dev"
+}

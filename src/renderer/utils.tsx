@@ -94,7 +94,7 @@ export function formatMessagePayload(message: ConsumedMessage) {
     partition: message.partition,
     offset: message.offset,
     timestamp: message.timestamp,
-    key: parseJson(message.key),
+    key: message.key,
     value: parsedValue,
     headers: message.headers
   };

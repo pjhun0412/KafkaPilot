@@ -1288,6 +1288,7 @@ export function MessageInspector(props: {
                 }}>
                   <optgroup label={t(language, "label.mapProjectionWgs84Group")}>
                     <option value="wgs84">WGS84 (Lat/Lng Deg)</option>
+                    <option value="wgs84_e6">{t(language, "label.mapProjectionWgs84E6")}</option>
                     <option value="wgs84_msec">WGS84 (Lat/Lng Msec)</option>
                   </optgroup>
                   <optgroup label={t(language, "label.mapProjectionTmGroup")}>

@@ -2,8 +2,17 @@
 
 ## Unreleased
 
+## 2.0.8
+
+### Added
+
+- Support WGS84 integer coordinates (E6, degrees multiplied by 1,000,000) in per-topic Map field mapping.
+
 ### Fixed
 
+- Preserve Kafka keys as their original strings in the message inspector, including integers beyond JavaScript's safe range.
+- Apply saved Map field paths to incoming live messages using the same payload structure as the message inspector.
+- Load Map Viewer from the Vite development server in development mode so source changes appear without a separate build.
 - Return validation messages for unknown Dynamic Field tokens instead of throwing a ReferenceError.
 - Forward topic activation when moving a message to Produce on another topic in the split pane.
 - Stop Consumer Group Offset Reset when group state lookup fails or the requested group state is missing.
@@ -13,7 +22,7 @@
 
 - Redraw Map Viewer vehicles with colored top-view bodies, clear heading indicators, selection outlines, separate alert markers, and labels below each vehicle.
 - Require Renderer type checking in build and package/release commands.
-- Add regression tests for templates, split-pane routing, and Consumer Group Offset Reset.
+- Add regression tests for templates, split-pane routing, Consumer Group Offset Reset, original keys, and Map coordinate mapping.
 - Align local packaging instructions, macOS app paths, store documentation, and template roadmap status with the implementation.
 
 ## 2.0.7
