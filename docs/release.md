@@ -54,7 +54,7 @@ This runs the full build and writes the installer, blockmap, and update metadata
 
 Start release packaging with a clean generated `dist/` directory. The current Vite configuration retains old output, so repeated builds can include unused bundles. Only remove verified, Git-ignored build output within the checkout.
 
-Current release notes: [2.0.8](releases/2.0.8.md).
+Current release notes: [2.0.9](releases/2.0.9.md).
 
 Publish the Windows installer:
 
@@ -66,7 +66,7 @@ $byulsolCli = 'C:\workspace\byulsol-secret-web\bin\byulsol-labs.exe'
 & $byulsolCli run --env prod --allow-prod --only GH_TOKEN -- npm run release:win
 ```
 
-Push the intended release commit and tag before publishing. For a staged release, upload the already verified artifacts to a GitHub draft, verify their hashes, then publish it with the matching [release notes](releases/2.0.8.md). Do not replace assets on an existing published version. The CLI injects `GH_TOKEN` only into the child process; the application itself does not need it.
+Push the intended release commit and tag before publishing. For a staged release, upload the already verified artifacts to a GitHub draft, verify their hashes, then publish it with the matching [release notes](releases/2.0.9.md). Do not replace assets on an existing published version. The CLI injects `GH_TOKEN` only into the child process; the application itself does not need it.
 
 The release should include:
 
@@ -109,9 +109,24 @@ Keep release notes focused on user-visible additions, improvements, and fixes.
 
 ## Central development metadata
 
-The byulsol project key is `kafkapilot`, project ID `b3e4df3d-ed1d-4606-85cc-46f7b9c62d49`. The Windows checkout uses alias `home` via `.byulsol/project.json`, whose default environment remains `dev`. The authorized 2.0.8 release uses an explicit `--env prod --allow-prod` after checking the prod connection. Repository URL, development UI address and npm commands are registered centrally. The Vite default is `http://localhost:5173`; this records configuration, not a running service.
+The byulsol project key is `kafkapilot`, project ID `b3e4df3d-ed1d-4606-85cc-46f7b9c62d49`. The Windows checkout uses alias `home` via `.byulsol/project.json`, whose default environment remains `dev`. Release commands use an explicit `--env prod --allow-prod` after checking the prod connection. Repository URL, development UI address and npm commands are registered centrally. The Vite default is `http://localhost:5173`; this records configuration, not a running service.
 
-The local build and regression tests require no external secrets. Secret-dependent execution must check the project's execution plan and inject only the required variables through the CLI. Publishing requires an explicit release request; the user authorized publishing 2.0.8 on 2026-10-07.
+The local build and regression tests require no external secrets. Secret-dependent execution must check the project's execution plan and inject only the required variables through the CLI. Publishing requires an explicit release request; the user authorized the 2.0.9 release on 2026-10-08.
+
+## 2.0.9 validation (2026-10-08)
+
+This release includes the [audit fixes](incidents/2026-10-08-audit-fixes.md), server groups, and the message viewer resize improvements.
+
+- Release-state `npm test`: 115 passed, 0 failed.
+- Clean Renderer/Main/Preload type checking, Vite build (1,986 modules), and Windows x64 NSIS packaging passed. The existing large-chunk warning remains (main bundle 513.60 kB).
+- ASAR validation found one current main bundle with 2.0.9 release notes, the incremental config adapter, transient consumer runner, map retention helper, KafkaJS 2.2.4 and its required protocol modules. No `.byulsol`, tests, or Git metadata are packaged.
+- Installer: `KafkaPilot-Setup-2.0.9.exe`, 147,943,066 bytes, SHA-256 `fb7a37fe72fd623f337c3aceec009917c14a36c11702a7fda8af5b55cb1f4c8f`.
+- Blockmap: 152,220 bytes, SHA-256 `de10c1146bfd8751b3fa3ddff132575b2f4692c16d22ab4d8fdadcbfe367fb45`.
+- `latest.yml`: 349 bytes, SHA-256 `5c663fcbf4ce0f95c42d3f83753cab4ce9916adc2cc27e3991c3783f4ccaa429`; its version, filename, installer size and SHA-512 match.
+- Authenticode status: NotSigned. Actual installation/upgrade, live Kafka operations, and macOS packaging were not tested.
+- Independent review checked release version/notes consistency and the helper's host restrictions, credential handling, tag matching, and rejection of incorrect/extra assets. The helper requires the uploaded draft asset digests to match the local files before public release.
+
+KafkaJS is pinned to 2.2.4. Confirm that the packaged ASAR contains its internal protocol encoder, decoder and error modules, along with `dist/main/incrementalConfigs.js`; those are required by the incremental settings adapter. Updating KafkaJS requires adapter revalidation. Settings updates require Kafka 2.3+ and API 44 v0 support.
 
 ## 2.0.8 validation (2026-10-07)
 

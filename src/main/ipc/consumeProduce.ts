@@ -19,6 +19,7 @@ type ConsumeProduceServiceParams = {
 
 export function createConsumeProduceService(params: ConsumeProduceServiceParams) {
   const activeConsumers = new Map<string, Consumer>();
+  const pendingLiveStarts = new Map<string, AbortController>();
 
   function sendConsumeError(error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
@@ -32,6 +33,16 @@ export function createConsumeProduceService(params: ConsumeProduceServiceParams)
   });
 
   async function stopActiveConsumer(request?: StopConsumeRequest) {
+    for (const [key, controller] of pendingLiveStarts) {
+      const matches = !request?.serverId || !request.topic || (request.consumerId
+        ? key === consumeKey(request.serverId, request.topic, request.consumerId)
+        : key.startsWith(`${request.serverId}:${request.topic}:`));
+      if (matches) {
+        controller.abort();
+        pendingLiveStarts.delete(key);
+        liveRecorders.close(key);
+      }
+    }
     if (request?.serverId && request.topic) {
       const consumerId = request.consumerId;
       const targets = consumerId
@@ -58,6 +69,7 @@ export function createConsumeProduceService(params: ConsumeProduceServiceParams)
   function registerIpcHandlers() {
     registerConsumeHandlers({
       activeConsumers,
+      pendingLiveStarts,
       getWindow: params.getWindow,
       liveRecorders,
       sendConsumeError,
@@ -67,7 +79,7 @@ export function createConsumeProduceService(params: ConsumeProduceServiceParams)
 
   return {
     consumeOffsetBatch,
-    hasActiveConsumers: () => activeConsumers.size > 0,
+    hasActiveConsumers: () => activeConsumers.size > 0 || pendingLiveStarts.size > 0,
     registerIpcHandlers,
     stopActiveConsumer
   };

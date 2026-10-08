@@ -32,6 +32,7 @@ export async function writeOffsetMessageExport({
   const pageSize = 5000;
   let remaining = totalLimit;
   let cursor = request.offset;
+  let endOffsetExclusive = request.endOffsetExclusive;
   let count = 0;
   let jsonFirst = true;
 
@@ -44,7 +45,7 @@ export async function writeOffsetMessageExport({
 
     while (remaining > 0) {
       const batchLimit = Math.min(pageSize, remaining);
-      const batch = await consumeOffsetBatch({ ...request, offset: cursor, limit: batchLimit });
+      const batch = await consumeOffsetBatch({ ...request, offset: cursor, endOffsetExclusive, limit: batchLimit });
       const messages = request.order === "desc" ? [...batch.messages].reverse() : batch.messages;
       if (messages.length === 0) break;
 
@@ -66,6 +67,9 @@ export async function writeOffsetMessageExport({
       cursor = request.order === "desc"
         ? messages[messages.length - 1].offset
         : nextOffset(messages[messages.length - 1].offset);
+      // The initial "0" means latest; a subsequent low-offset cursor is an
+      // actual boundary and must not wrap back to the latest records.
+      if (request.order === "desc") endOffsetExclusive = cursor;
     }
 
     if (request.format === "json") {

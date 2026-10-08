@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import type { Consumer } from "kafkajs";
 
 export function consumeKey(serverId: string, topic: string, consumerId = "default") {
@@ -10,7 +10,8 @@ function shortHash(value: string) {
 }
 
 export function kafkaToolConsumerGroupId(kind: "offset" | "time" | "live", parts: Array<string | number | undefined>) {
-  return `kafkapilot-${kind}-${shortHash(parts.map((part) => String(part ?? "")).join(":"))}`;
+  const requestSuffix = kind === "live" ? "" : `-${randomUUID()}`;
+  return `kafkapilot-${kind}-${shortHash(parts.map((part) => String(part ?? "")).join(":"))}${requestSuffix}`;
 }
 
 export async function shutdownConsumer(consumer: Consumer) {

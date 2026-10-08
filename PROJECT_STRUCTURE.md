@@ -57,6 +57,7 @@ src/main/
 ├─ avroDecoder.ts
 ├─ kafkaClient.ts          Kafka client/admin 생성 유틸
 ├─ liveMapWindow.ts        Map Viewer BrowserWindow 관리
+├─ incrementalConfigs.ts   KafkaJS 2.2.4 전용 증분 설정 변경 어댑터 (API 44 v0)
 ├─ logger.ts               앱 로그 기록
 ├─ main.ts                 Electron app entry
 ├─ menuText.ts             메뉴 i18n 텍스트
@@ -126,6 +127,7 @@ src/renderer/
 ├─ map-viewer.ts           Map Viewer renderer entry
 ├─ mapPreview.ts           Consume 메시지 좌표 추출, 좌표계 변환, Map Viewer 전송 유틸
 ├─ mapViewerVehicles.ts    Map Viewer 차량 상태/마커 유틸
+├─ mapNavigation.ts        자동 지도 이동과 사용자 탐색 구분
 ├─ messageFilters.ts       Consume 메시지 필터
 ├─ produceTemplate.ts      Produce 동적 필드/템플릿 유틸
 ├─ quickSearch.ts          Global Search 모델
@@ -278,6 +280,8 @@ src/renderer/stores/
 - `serverFormStore`: 서버 등록/수정 Form 상태
 - `sidebarInteractionStore`: Context Menu, Drag/Drop 상태
 - `serverGroupsStore`: 서버 그룹 이름, 멤버 순서, 접힘 상태. `useServerGroups`가 검색 결과와 그룹 편집 상태를 구성하고 `shared/serverGroups.ts`가 설정 정규화와 멤버 이동을 담당한다. `AppPreferences.serverGroups`로 저장·가져오기를 지원한다.
+
+`main/ipc/transientConsumerRunner.ts`는 Offset/Time 조회의 시작·타이머·진행 중 디코딩·실패 정리를 공유한다. 일회성 조회마다 고유 Consumer Group을 쓰고 Live는 pane과 독립적인 session ID로 라우팅한다. `shared/liveMapRetention.ts`는 Main 버퍼와 Map Viewer가 같은 5,000개 ID 보관 기준을 적용하도록 한다.
 
 ## 주요 기능
 

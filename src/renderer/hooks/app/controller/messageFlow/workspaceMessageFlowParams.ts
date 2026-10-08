@@ -27,11 +27,13 @@ export function createWorkspaceMessageFlowParams({
       consumeStates: derived.consumeStates,
       selectedDefaultConsumeState: derived.selectedDefaultConsumeState,
       runWorkspaceTask: state.runWorkspaceTask,
+      pendingLiveTasksRef: state.pendingLiveTasksRef,
       updateConsumeStateFor: state.updateConsumeStateFor,
       setActiveConsumeTaskKeys: state.setActiveConsumeTaskKeys,
       setStreamingTopicsByServer: state.setStreamingTopicsByServer,
       setStartedConsumer: state.setStartedConsumer,
       getStopConsumerId: state.getStopConsumerId,
+      getMessageTarget: state.getMessageTarget,
       clearStoppedConsumer: state.clearStoppedConsumer,
       clearMessageTarget: state.clearMessageTarget,
       setStatus: state.setStatus

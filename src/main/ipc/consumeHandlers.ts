@@ -17,11 +17,13 @@ import type {
   StopConsumeRequest
 } from "../../shared/types.js";
 import { handleLogged } from "./ipcErrorBoundary.js";
+import { consumeKey } from "./consumeUtils.js";
 
 type LiveRecorderRegistry = ReturnType<typeof createLiveRecorderRegistry>;
 
 type ConsumeHandlerParams = {
   activeConsumers: Map<string, Consumer>;
+  pendingLiveStarts: Map<string, AbortController>;
   getWindow: () => BrowserWindow | null;
   liveRecorders: LiveRecorderRegistry;
   sendConsumeError: (error: unknown) => void;
@@ -30,6 +32,7 @@ type ConsumeHandlerParams = {
 
 export function registerConsumeHandlers({
   activeConsumers,
+  pendingLiveStarts,
   getWindow,
   liveRecorders,
   sendConsumeError,
@@ -53,13 +56,23 @@ export function registerConsumeHandlers({
 
   handleLogged("kafka:consume-start", async (_event, request: StartConsumeRequest) => {
     const consumerId = request.consumerId ?? "default";
-    await stopActiveConsumer({ serverId: request.serverId, topic: request.topic, consumerId });
-    return startLiveConsume({
-      request,
-      activeConsumers,
-      liveRecorders,
-      getWindow,
-      sendConsumeError
-    });
+    const stopped = stopActiveConsumer({ serverId: request.serverId, topic: request.topic, consumerId });
+    const key = consumeKey(request.serverId, request.topic, consumerId);
+    const controller = new AbortController();
+    pendingLiveStarts.set(key, controller);
+    try {
+      await stopped;
+      if (controller.signal.aborted) return {};
+      return await startLiveConsume({
+        request,
+        activeConsumers,
+        liveRecorders,
+        getWindow,
+        sendConsumeError,
+        signal: controller.signal
+      });
+    } finally {
+      if (pendingLiveStarts.get(key) === controller) pendingLiveStarts.delete(key);
+    }
   });
 }

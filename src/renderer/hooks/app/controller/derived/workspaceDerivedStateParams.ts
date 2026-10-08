@@ -11,6 +11,7 @@ export function createWorkspaceDerivedStateParams(state: ControllerState): Works
     viewByServer: state.viewByServer,
     openedTopicTabsByServer: state.openedTopicTabsByServer,
     topicDetailByServer: state.topicDetailByServer,
+    topicDetailCacheByServer: state.topicDetailCacheByServer,
     consumeStatesByServer: state.consumeStatesByServer,
     splitPane: state.splitPane,
     getDefaultConsumeState: state.getDefaultConsumeState,

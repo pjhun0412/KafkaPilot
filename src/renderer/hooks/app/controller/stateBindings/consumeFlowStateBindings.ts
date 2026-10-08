@@ -18,6 +18,7 @@ export function createConsumeFlowStateBindings(appState: AppStateComposition) {
   const { getProduceDraft, updateProduceDraftFor, resetProduceDrafts } = appState.produceDrafts;
   const {
     getMessageTarget,
+    pendingLiveTasksRef,
     setStartedConsumer,
     getStopConsumerId,
     clearStoppedConsumer,
@@ -54,6 +55,7 @@ export function createConsumeFlowStateBindings(appState: AppStateComposition) {
     rememberViewerPreference,
     moveConsumeStateBetweenPanes,
     paneToast,
+    pendingLiveTasksRef,
     resetProduceDrafts,
     retargetLiveTopic,
     runPaneTask,

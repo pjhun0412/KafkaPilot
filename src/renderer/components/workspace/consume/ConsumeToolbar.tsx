@@ -59,8 +59,9 @@ type ConsumeToolbarProps = {
 
 export function ConsumeToolbar(props: ConsumeToolbarProps) {
   const language = useAppLanguage();
-  const isStartingLive = props.mode === "live" && props.isQuerying && !props.isConsuming;
-  const isStoppingLive = props.mode === "live" && props.isQuerying && props.isConsuming;
+  // Live sessions are registered before connecting and removed before stopping.
+  const isStartingLive = props.mode === "live" && props.isQuerying && props.isConsuming;
+  const isStoppingLive = props.mode === "live" && props.isQuerying && !props.isConsuming;
   return (
     <>
       <div className="toolbar">
@@ -166,13 +167,13 @@ export function ConsumeToolbar(props: ConsumeToolbarProps) {
         )}
         {props.isConsuming ? (
           <Button variant="danger" onClick={props.onStop} disabled={props.isQuerying}>
-            {isStoppingLive ? <RefreshCw size={16} className="spin" /> : <Square size={16} />}
-            {isStoppingLive ? t(language, "label.stopping") : t(language, "label.pause")}
+            {isStartingLive ? <RefreshCw size={16} className="spin" /> : <Square size={16} />}
+            {isStartingLive ? t(language, "label.consuming") : t(language, "label.pause")}
           </Button>
         ) : (
           <Button variant="primary" onClick={props.onStart} disabled={props.isQuerying}>
-            {isStartingLive ? <RefreshCw size={16} className="spin" /> : <Play size={16} />}
-            {isStartingLive ? t(language, "label.consuming") : "Consume"}
+            {isStoppingLive ? <RefreshCw size={16} className="spin" /> : <Play size={16} />}
+            {isStoppingLive ? t(language, "label.stopping") : "Consume"}
           </Button>
         )}
         <ConsumeExportMenu

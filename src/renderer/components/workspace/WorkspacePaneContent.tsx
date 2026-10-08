@@ -105,13 +105,13 @@ export function WorkspacePaneContent(props: WorkspacePaneContentProps) {
     totalCount: 10
   });
   const [produceIntervalStates, setProduceIntervalStates] = useState<Record<string, typeof emptyProduceIntervalState>>({});
-  const produceIntervalRunRef = useRef<Record<string, boolean>>({});
+  const produceIntervalRunRef = useRef<Record<string, symbol>>({});
   const produceIntervalKey = `${props.serverId}\u0000${props.topic}`;
   const produceIntervalState = produceIntervalStates[produceIntervalKey] ?? emptyProduceIntervalState;
 
   useEffect(() => () => {
     Object.keys(produceIntervalRunRef.current).forEach((key) => {
-      produceIntervalRunRef.current[key] = false;
+      delete produceIntervalRunRef.current[key];
     });
   }, []);
 
@@ -119,7 +119,7 @@ export function WorkspacePaneContent(props: WorkspacePaneContentProps) {
     const allowedKeys = new Set(props.openedTopicTabs.map((topic) => `${props.serverId}\u0000${topic}`));
     Object.keys(produceIntervalRunRef.current).forEach((key) => {
       if (!allowedKeys.has(key)) {
-        produceIntervalRunRef.current[key] = false;
+        delete produceIntervalRunRef.current[key];
         const topic = key.split("\u0000")[1] ?? "";
         props.onProduceIntervalActivity?.(topic, false);
       }
@@ -140,23 +140,27 @@ export function WorkspacePaneContent(props: WorkspacePaneContentProps) {
     const count = request.stopMode === "count" ? Math.max(1, Math.min(100000, Math.floor(request.count || 1))) : Number.POSITIVE_INFINITY;
     const durationMs = request.stopMode === "duration" ? parseProduceDurationMs(request.durationText) : 0;
     const startedAt = Date.now();
-    produceIntervalRunRef.current[runKey] = true;
+    const runId = Symbol(runKey);
+    produceIntervalRunRef.current[runKey] = runId;
+    const isCurrentRun = () => produceIntervalRunRef.current[runKey] === runId;
     props.onProduceIntervalActivity?.(runTopic, true);
     setProduceIntervalStates((current) => ({
       ...current,
       [runKey]: { error: "", isRunning: true, sentCount: 0, startedAt }
     }));
 
-    for (let index = 1; index <= count && produceIntervalRunRef.current[runKey]; index += 1) {
+    for (let index = 1; index <= count && isCurrentRun(); index += 1) {
       if (durationMs > 0 && Date.now() - startedAt >= durationMs) break;
       try {
         await props.onProduceDraft(renderProduceTemplateDraft(request.draft, index));
+        if (!isCurrentRun()) return;
         setProduceIntervalStates((current) => ({
           ...current,
           [runKey]: { ...(current[runKey] ?? emptyProduceIntervalState), sentCount: index }
         }));
       } catch (error) {
-        produceIntervalRunRef.current[runKey] = false;
+        if (!isCurrentRun()) return;
+        delete produceIntervalRunRef.current[runKey];
         props.onProduceIntervalActivity?.(runTopic, false);
         setProduceIntervalStates((current) => ({
           ...current,
@@ -168,12 +172,13 @@ export function WorkspacePaneContent(props: WorkspacePaneContentProps) {
         }));
         return;
       }
-      if (index < count && produceIntervalRunRef.current[runKey]) {
+      if (index < count && isCurrentRun()) {
         if (durationMs > 0 && Date.now() - startedAt + delay > durationMs) break;
         await new Promise((resolve) => window.setTimeout(resolve, delay));
       }
     }
-    produceIntervalRunRef.current[runKey] = false;
+    if (!isCurrentRun()) return;
+    delete produceIntervalRunRef.current[runKey];
     props.onProduceIntervalActivity?.(runTopic, false);
     setProduceIntervalStates((current) => ({
       ...current,
@@ -182,7 +187,7 @@ export function WorkspacePaneContent(props: WorkspacePaneContentProps) {
   }
 
   function stopProduceInterval() {
-    produceIntervalRunRef.current[produceIntervalKey] = false;
+    delete produceIntervalRunRef.current[produceIntervalKey];
     props.onProduceIntervalActivity?.(props.topic, false);
     setProduceIntervalStates((current) => ({
       ...current,

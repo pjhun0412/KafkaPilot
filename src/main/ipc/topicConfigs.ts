@@ -4,7 +4,7 @@ import type {
   TopicConfigUpdateRequest
 } from "../../shared/types.js";
 import { configSourceLabel } from "../kafkaUtils.js";
-import { withAdmin } from "../kafkaClient.js";
+import { updateKafkaConfigs, withAdmin } from "../kafkaClient.js";
 
 export async function loadTopicConfigs(admin: Admin, topicName: string): Promise<TopicConfigEntry[]> {
   const configsResponse = await admin.describeConfigs({
@@ -40,15 +40,10 @@ export async function updateTopicConfigs(request: TopicConfigUpdateRequest): Pro
   if (entries.length === 0) {
     throw new Error("No topic settings to change.");
   }
-  return withAdmin(request.serverId, async (admin) => {
-    await admin.alterConfigs({
-      validateOnly: Boolean(request.validateOnly),
-      resources: [{
-        type: ConfigResourceTypes.TOPIC,
-        name: request.topic,
-        configEntries: entries
-      }]
-    });
-    return loadTopicConfigs(admin, request.topic);
-  });
+  await updateKafkaConfigs(request.serverId, {
+    type: ConfigResourceTypes.TOPIC,
+    name: request.topic,
+    configEntries: entries
+  }, Boolean(request.validateOnly));
+  return withAdmin(request.serverId, (admin) => loadTopicConfigs(admin, request.topic));
 }

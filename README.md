@@ -13,7 +13,11 @@ No server setup. Install, connect, and start working with Kafka in seconds.
 
 [한국어](README.ko.md) &nbsp;·&nbsp; [Changelog](CHANGELOG.md) &nbsp;·&nbsp; [Docs](docs/)
 
-![Version](https://img.shields.io/badge/version-2.0.8-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0.9-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
+
+[Download Windows x64 2.0.9](https://github.com/pjhun0412/KafkaPilot/releases/download/v2.0.9/KafkaPilot-Setup-2.0.9.exe) &nbsp;·&nbsp; [Release notes](docs/releases/2.0.9.md)
+
+The Windows installer is unsigned. This release does not include a macOS installer.
 
 [![PayPal](https://img.shields.io/badge/donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://www.paypal.com/ncp/payment/R6DBD3HSJ9TPE)
 
@@ -60,6 +64,8 @@ When your web dashboard isn't ready yet and you need to verify that coordinate d
 - Speed display in `km/h` or `m/s`
 
 For coordinates stored as degrees multiplied by one million, such as `currentLat: 37757309` and `currentLng: 128905820`, select **Map Settings → CRS → WGS84 integer coordinates (÷1,000,000)**. Map `Y/Lat` to `currentLat` and `X/Lng` to `currentLng` to display `37.757309, 128.905820`. The coordinate format and field mapping are saved per topic.
+
+The viewer and its background buffer retain the 5,000 most recently updated IDs. Older IDs and their map layers are removed; map retention does not change Kafka records or recorded files. Auto Fit stays enabled during automatic zooming and pauses when you navigate the map manually.
 
 ---
 
@@ -171,6 +177,8 @@ All shortcuts can be rebound in `Preferences > Editor > Shortcuts`.
 ---
 
 ## Build
+
+Topic and broker configuration updates require Kafka 2.3 or later with IncrementalAlterConfigs v0 support. They change only the supplied settings; unsupported brokers report an error. KafkaJS is pinned to 2.2.4 because the incremental update adapter uses its authenticated internal transport. Revalidate that adapter before upgrading KafkaJS. See the [audit fixes](docs/incidents/2026-10-08-audit-fixes.md).
 
 **Windows**
 

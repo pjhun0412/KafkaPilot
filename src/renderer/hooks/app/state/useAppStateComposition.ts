@@ -34,10 +34,11 @@ export function useAppStateComposition() {
     consumeDefaultsByServer: resources.preferences.consumeDefaultsByServer
   });
   const produceDrafts = useProduceDraftStore();
-  const liveConsumeRouting = useLiveConsumeRouting({
-    setStreamingTopicsByServer: resources.streaming.setStreamingTopicsByServer
-  });
   const feedback = useFeedbackState();
+  const liveConsumeRouting = useLiveConsumeRouting({
+    setStreamingTopicsByServer: resources.streaming.setStreamingTopicsByServer,
+    setActiveConsumeTaskKeys: feedback.setActiveConsumeTaskKeys
+  });
   const workspaceTasks = useWorkspaceTasks({
     setLoading: feedback.setLoading,
     setStatus: feedback.setStatus,

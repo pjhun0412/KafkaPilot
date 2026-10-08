@@ -4,7 +4,7 @@ import type {
   BrokerConfigUpdateRequest,
   BrokerDetail
 } from "../../shared/types.js";
-import { withAdmin } from "../kafkaClient.js";
+import { updateKafkaConfigs, withAdmin } from "../kafkaClient.js";
 import { configSourceLabel } from "../kafkaUtils.js";
 import { loadBrokerSummaries } from "./brokerQueries.js";
 
@@ -44,15 +44,10 @@ export async function loadBrokerDetail(admin: Admin, brokerId: number): Promise<
 }
 
 export async function updateBrokerConfig(request: BrokerConfigUpdateRequest): Promise<BrokerDetail> {
-  return withAdmin(request.serverId, async (admin) => {
-    await admin.alterConfigs({
-      validateOnly: Boolean(request.validateOnly),
-      resources: [{
-        type: ConfigResourceTypes.BROKER,
-        name: String(request.brokerId),
-        configEntries: [{ name: request.name, value: request.value }]
-      }]
-    });
-    return loadBrokerDetail(admin, request.brokerId);
-  });
+  await updateKafkaConfigs(request.serverId, {
+    type: ConfigResourceTypes.BROKER,
+    name: String(request.brokerId),
+    configEntries: [{ name: request.name, value: request.value }]
+  }, Boolean(request.validateOnly));
+  return withAdmin(request.serverId, (admin) => loadBrokerDetail(admin, request.brokerId));
 }

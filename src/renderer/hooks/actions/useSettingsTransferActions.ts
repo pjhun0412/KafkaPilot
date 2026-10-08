@@ -78,11 +78,13 @@ export function useSettingsTransferActions({
   })));
   const layoutPreferenceSetters = useLayoutStore(useShallow((state) => ({
     setSidebarWidth: state.setSidebarWidth,
+    setSidebarCollapsed: state.setSidebarCollapsed,
     setServerPanelHeight: state.setServerPanelHeight,
     setMessagePaneHeight: state.setMessagePaneHeight,
     setFontFamily: state.setFontFamily,
     setFontSize: state.setFontSize,
     setFontWeight: state.setFontWeight,
+    setLanguage: state.setLanguage,
     setExportFormatTemplate: state.setExportFormatTemplate,
     setKeyboardShortcuts: state.setKeyboardShortcuts,
     setLogRetentionDays: state.setLogRetentionDays,

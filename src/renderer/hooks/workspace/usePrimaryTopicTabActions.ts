@@ -39,9 +39,7 @@ export function usePrimaryTopicTabActions({
   setViewByServer
 }: PrimaryTopicTabActionsParams) {
   async function closeTopicTab(topic: string) {
-    if (isTopicStreaming(selectedServerId, topic, "primary")) {
-      await stopConsume(selectedServerId, topic, "primary");
-    }
+    await stopConsume(selectedServerId, topic, "primary");
     const pinnedTabs = previewTopic ? openedTopicTabs.filter((item) => item !== previewTopic) : openedTopicTabs;
     const nextTabs = previewTopic === topic ? pinnedTabs : removeTopicTab(pinnedTabs, topic);
     const visibleNextTabs = previewTopic && previewTopic !== topic ? [...nextTabs, previewTopic] : nextTabs;

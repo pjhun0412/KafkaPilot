@@ -15,9 +15,7 @@ export async function stopSplitPaneStreamingTopics(
   stopConsume: (serverId?: string, topic?: string, pane?: WorkspacePaneId) => Promise<void>
 ) {
   for (const topic of pane.topicTabs) {
-    if (isTopicStreaming(pane.serverId, topic, "split")) {
-      await stopConsume(pane.serverId, topic, "split");
-    }
+    await stopConsume(pane.serverId, topic, "split");
   }
 }
 
@@ -59,9 +57,7 @@ export function retargetSplitStreamingTopics(
   retargetLiveTopic: (serverId: string, topic: string, from: WorkspacePaneId, to: WorkspacePaneId) => void
 ) {
   for (const topic of pane.topicTabs) {
-    if (isTopicStreaming(pane.serverId, topic, "split")) {
-      retargetLiveTopic(pane.serverId, topic, "split", "primary");
-    }
+    retargetLiveTopic(pane.serverId, topic, "split", "primary");
   }
 }
 
@@ -76,12 +72,11 @@ export async function moveTopicBetweenPanes(params: {
   moveConsumeStateBetweenPanes: (serverId: string, topic: string, from: WorkspacePaneId, to: WorkspacePaneId) => void;
   retargetLiveTopic: (serverId: string, topic: string, from: WorkspacePaneId, to: WorkspacePaneId) => void;
 }) {
-  const isStreaming = params.isTopicStreaming(params.serverId, params.topic, params.from);
-  if (isStreaming && params.targetAlreadyOpen) {
+  if (params.targetAlreadyOpen) {
     await params.stopConsume(params.serverId, params.topic, params.from);
   }
   params.moveConsumeStateBetweenPanes(params.serverId, params.topic, params.from, params.to);
-  if (isStreaming && !params.targetAlreadyOpen) {
+  if (!params.targetAlreadyOpen) {
     params.retargetLiveTopic(params.serverId, params.topic, params.from, params.to);
   }
 }

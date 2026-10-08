@@ -10,6 +10,7 @@ export type WorkspaceDerivedStateParams = {
   viewByServer: Record<string, View>;
   openedTopicTabsByServer: Record<string, string[]>;
   topicDetailByServer: Record<string, TopicDetail | null>;
+  topicDetailCacheByServer: Record<string, Record<string, TopicDetail>>;
   consumeStatesByServer: Record<string, Record<string, TopicConsumeState>>;
   splitPane: SplitPaneState | null;
   getDefaultConsumeState: (serverId?: string, topic?: string) => TopicConsumeState;
@@ -25,7 +26,9 @@ export function useWorkspaceDerivedState(params: WorkspaceDerivedStateParams) {
   const openedTopicTabs = previewTopic && !pinnedTopicTabs.includes(previewTopic)
     ? [...pinnedTopicTabs, previewTopic]
     : pinnedTopicTabs;
-  const topicDetail = params.topicDetailByServer[params.selectedServerId] ?? null;
+  const serverDetail = params.topicDetailByServer[params.selectedServerId];
+  const topicDetail = params.topicDetailCacheByServer[params.selectedServerId]?.[selectedTopic]
+    ?? (serverDetail?.name === selectedTopic ? serverDetail : null);
   const consumeStates = params.consumeStatesByServer[params.selectedServerId] ?? {};
   const selectedDefaultConsumeState = params.getDefaultConsumeState(params.selectedServerId, selectedTopic);
   const visibleSplitPane = params.splitPane?.serverId === params.selectedServerId ? params.splitPane : null;

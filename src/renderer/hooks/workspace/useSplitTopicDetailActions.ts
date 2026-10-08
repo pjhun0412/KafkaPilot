@@ -41,7 +41,7 @@ export function useSplitTopicDetailActions({
     );
   }
 
-  function previewSplitDetail(serverId: string, topic: string, detail: TopicDetail) {
+  function previewSplitDetail(serverId: string, topic: string, detail: TopicDetail | null) {
     setSplitPane((current) => current && current.serverId === serverId
       ? (() => {
           const isPinnedTopic = current.topicTabs.includes(topic) && current.previewTopic !== topic;
@@ -85,13 +85,13 @@ export function useSplitTopicDetailActions({
   async function previewSplitTopicDetailSilent(serverId: string, topic: string, options: { force?: boolean } = {}) {
     if (!kafkaApi || !topic) return;
     const cachedDetail = options.force ? null : getCachedTopicDetail(serverId, topic);
+    previewSplitDetail(serverId, topic, cachedDetail);
     if (cachedDetail) {
-      previewSplitDetail(serverId, topic, cachedDetail);
       return;
     }
     const detail = await kafkaApi.getTopicDetail(serverId, topic);
     cacheTopicDetail(serverId, detail);
-    previewSplitDetail(serverId, topic, detail);
+    applySplitDetail(serverId, topic, detail);
   }
 
   return {

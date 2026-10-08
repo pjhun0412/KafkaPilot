@@ -1,6 +1,7 @@
 import { Kafka, logLevel, type Admin } from "kafkajs";
 import type { ServerProfile } from "../shared/types.js";
 import { getProfile } from "./storage.js";
+import { alterConfigsIncrementally, type IncrementalConfigResource } from "./incrementalConfigs.js";
 
 export function createKafka(profile: ServerProfile) {
   const sasl = profile.security?.sasl;
@@ -57,4 +58,9 @@ export async function withAdmin<T>(serverId: string, action: (admin: Admin) => P
   } finally {
     await admin.disconnect();
   }
+}
+
+export async function updateKafkaConfigs(serverId: string, resource: IncrementalConfigResource, validateOnly = false): Promise<void> {
+  const profile = await getProfile(serverId);
+  await alterConfigsIncrementally(createKafka(profile), resource, validateOnly);
 }

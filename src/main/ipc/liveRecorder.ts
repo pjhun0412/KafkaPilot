@@ -36,9 +36,9 @@ function createLiveRecordTimestamp() {
 export function createLiveRecorderRegistry(params: LiveRecorderRegistryParams) {
   const activeLiveRecorders = new Map<string, LiveRecorder>();
 
-  function close(key: string) {
+  function close(key: string, expected?: LiveRecorder) {
     const recorder = activeLiveRecorders.get(key);
-    if (!recorder) return;
+    if (!recorder || (expected && recorder !== expected)) return;
     activeLiveRecorders.delete(key);
     void recorder.pending.finally(() => {
       recorder.stream.end();
@@ -51,7 +51,7 @@ export function createLiveRecorderRegistry(params: LiveRecorderRegistryParams) {
     }
   }
 
-  async function start(key: string, request: StartConsumeRequest) {
+  async function start(key: string, request: StartConsumeRequest, signal?: AbortSignal) {
     const window = params.getWindow();
     if (!request.record || !window) return undefined;
     const defaultPath = path.join(
@@ -67,10 +67,12 @@ export function createLiveRecorderRegistry(params: LiveRecorderRegistryParams) {
         { name: "All Files", extensions: ["*"] }
       ]
     });
+    if (signal?.aborted) return undefined;
     if (result.canceled || !result.filePath) {
       throw new Error("Live recording canceled.");
     }
     await mkdir(path.dirname(result.filePath), { recursive: true });
+    if (signal?.aborted) return undefined;
     const recorder = {
       path: result.filePath,
       stream: createWriteStream(result.filePath, { encoding: "utf8", flags: "a" }),

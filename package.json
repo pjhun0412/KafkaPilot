@@ -1,6 +1,6 @@
 {
   "name": "kafkapilot",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "KafkaPilot",
   "author": "PJHUN",
   "private": true,
@@ -25,7 +25,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "avsc": "^5.7.9",
     "electron-updater": "^6.8.3",
-    "kafkajs": "^2.2.4",
+    "kafkajs": "2.2.4",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.468.0",
     "proj4": "^2.20.9",

@@ -11,6 +11,72 @@ export type ReleaseNote = {
 };
 
 export const releaseNotes: Record<string, Record<AppLanguage, ReleaseNote>> = {
+  "2.0.9": {
+    ko: {
+      title: "KafkaPilot 2.0.9",
+      sections: [
+        {
+          heading: "서버 그룹과 작업 화면",
+          items: [
+            "접을 수 있는 서버 그룹, 드래그 이동, 그룹·서버 순서 변경과 설정 Export/Import를 지원합니다. 그룹을 삭제해도 서버는 유지됩니다.",
+            "사이드바 간격을 줄이고 검색에 그룹 이름과 접힌 그룹의 서버를 포함했습니다.",
+            "작은 창에서도 메시지 그리드와 Viewer의 구분선과 높이가 안정적으로 유지됩니다."
+          ]
+        },
+        {
+          heading: "Consume·Produce 안정성",
+          items: [
+            "Interval Produce를 중지·재시작할 때 이전 전송 루프가 재개되던 문제를 수정했습니다.",
+            "Live 연결 대기 중 탭 닫기·중지·분할 화면 이동을 세션별로 처리하고, 이전 응답과 이벤트를 무시합니다.",
+            "응답 순서가 바뀌어도 현재 선택한 토픽의 상세 정보를 표시합니다.",
+            "Offset/Time 조회 간 Consumer Group 충돌, 느린 시작·Avro 디코딩 중 메시지 누락, 실패한 연결의 정리 누락과 역순 Export의 중복 조회를 수정했습니다.",
+            "검색 정규식의 역슬래시를 보존하고 메시지마다 일관되게 비교합니다."
+          ]
+        },
+        {
+          heading: "설정과 Map Viewer",
+          items: [
+            "토픽·브로커 설정 변경 시 다른 설정을 유지합니다. 설정 변경에는 IncrementalAlterConfigs v0를 지원하는 Kafka 2.3 이상이 필요합니다.",
+            "설정 Import에서 언어와 사이드바 접힘 상태를 복원하고, Font Reset이 Export 템플릿을 변경하지 않도록 수정했습니다.",
+            "설정 백업·복원과 동시 저장 처리를 개선했습니다.",
+            "자동 확대·축소 중 Map Auto Fit을 유지하고, 지도와 백그라운드 버퍼는 최근 갱신된 ID 5,000개를 보관합니다. Kafka 원본과 녹화 파일에는 영향을 주지 않습니다."
+          ]
+        }
+      ]
+    },
+    en: {
+      title: "KafkaPilot 2.0.9",
+      sections: [
+        {
+          heading: "Server groups and workspace",
+          items: [
+            "Added collapsible server groups, drag-and-drop moves, group/member ordering, and settings export/import support. Deleting a group keeps its servers.",
+            "Made the sidebar more compact and included group names and collapsed members in server search.",
+            "Kept the message grid/Viewer divider and pane heights stable in small windows."
+          ]
+        },
+        {
+          heading: "Consume and Produce reliability",
+          items: [
+            "Prevented stopped Interval Produce loops from resuming after a restart.",
+            "Track pending Live starts, tab closure, stop actions, and split-pane moves by session, ignoring obsolete responses and events.",
+            "Keep topic details aligned with the selected topic when responses arrive out of order.",
+            "Fixed Consumer Group conflicts between Offset/Time requests, missing messages during slow starts or Avro decoding, cleanup after failed connections, and duplicate pages in descending exports.",
+            "Preserve backslashes in search regex literals and compare consistently across messages."
+          ]
+        },
+        {
+          heading: "Settings and Map Viewer",
+          items: [
+            "Topic and broker configuration updates preserve unrelated settings. Updates require Kafka 2.3 or later with IncrementalAlterConfigs v0 support.",
+            "Restore language and collapsed sidebar state during settings import, and keep Export templates unchanged when resetting fonts.",
+            "Improved settings backup, recovery, and concurrent save handling.",
+            "Keep Map Auto Fit enabled during automatic zooming and retain the 5,000 most recently updated IDs in the viewer and background buffer. Kafka records and recorded files are unaffected."
+          ]
+        }
+      ]
+    }
+  },
   "2.0.8": {
     ko: {
       title: "KafkaPilot 2.0.8",

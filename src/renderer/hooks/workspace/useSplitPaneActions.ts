@@ -170,9 +170,7 @@ export function useSplitPaneActions({
   async function closeSplitTopicTab(topic: string) {
     const pane = splitPane;
     if (!pane) return;
-    if (isTopicStreaming(pane.serverId, topic, "split")) {
-      await stopConsume(pane.serverId, topic, "split");
-    }
+    await stopConsume(pane.serverId, topic, "split");
     clearConsumeStateForPane(pane.serverId, topic, "split");
     await applySplitTopicClose(topic);
   }

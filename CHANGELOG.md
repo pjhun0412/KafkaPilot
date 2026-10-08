@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.9 — 2026-10-08
 
 ### Added
 
@@ -17,6 +17,14 @@
 
 ### Fixed
 
+- Update topic and broker settings with incremental SET requests so unrelated overrides survive; require supported brokers and pin the verified KafkaJS adapter to 2.2.4.
+- Isolate repeated Produce runs and Live sessions across stop/restart, pending starts, tab closure, and pane moves; ignore obsolete responses and events.
+- Keep topic details aligned with the selected topic when responses arrive out of order.
+- Isolate Offset/Time consumer groups, drain accepted decodes before completion, start idle timing after group join, clean up failed starts, and stop descending exports at the low boundary.
+- Preserve regex escapes and reset stateful expressions between matches.
+- Preserve imported language/sidebar state, reset font weight without changing export templates, create recovery directories, and recover missing primary settings from backup.
+- Preserve Map Auto Fit during programmatic zoom and bound background/viewer retention to 5,000 recently updated IDs, disposing evicted layers.
+- Document the [audit fixes and verification limits](docs/incidents/2026-10-08-audit-fixes.md).
 - Keep the message grid/viewer divider stable in compact windows, adapt both panes to window and toolbar sizes, and preserve the preferred height across window resizing. See the [resize investigation](docs/incidents/2026-10-08-message-viewer-resize.md).
 - Clean up pending divider updates and pointer capture when dragging is cancelled or the pane closes.
 

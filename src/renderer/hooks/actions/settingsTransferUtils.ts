@@ -14,6 +14,7 @@ import type {
 import type { TopicConsumeState, TopicWorkView, View } from "../../uiTypes";
 import type { ViewerPreferences } from "../../viewerPreferences";
 import { pruneViewerPreferences } from "../../viewerPreferences";
+import type { LanguagePreference } from "../../i18n";
 
 export type ImportedPreferenceSetters = {
   setServerGroups: (groups: AppPreferences["serverGroups"]) => void;
@@ -24,11 +25,13 @@ export type ImportedPreferenceSetters = {
   setManualAvroSchemasByServer: Dispatch<SetStateAction<Record<string, Record<string, ManualAvroSchema>>>>;
   setProduceTemplatesByServer: Dispatch<SetStateAction<NonNullable<AppPreferences["produceTemplatesByServer"]>>>;
   setSidebarWidth: Dispatch<SetStateAction<number>>;
+  setSidebarCollapsed: Dispatch<SetStateAction<boolean>>;
   setServerPanelHeight: Dispatch<SetStateAction<number>>;
   setMessagePaneHeight: Dispatch<SetStateAction<number>>;
   setFontFamily: Dispatch<SetStateAction<string>>;
   setFontSize: Dispatch<SetStateAction<number>>;
   setFontWeight: Dispatch<SetStateAction<number>>;
+  setLanguage: Dispatch<SetStateAction<LanguagePreference>>;
   setExportFormatTemplate: Dispatch<SetStateAction<string>>;
   setKeyboardShortcuts: Dispatch<SetStateAction<NonNullable<AppPreferences["keyboardShortcuts"]>>>;
   setLogRetentionDays: Dispatch<SetStateAction<number>>;
@@ -69,11 +72,14 @@ export function applyImportedPreferences(preferences: AppPreferences, setters: I
   setters.setManualAvroSchemasByServer(preferences.manualAvroSchemasByServer ?? {});
   setters.setProduceTemplatesByServer(preferences.produceTemplatesByServer ?? {});
   if (typeof preferences.layout?.sidebarWidth === "number") setters.setSidebarWidth(preferences.layout.sidebarWidth);
+  if (typeof preferences.layout?.sidebarCollapsed === "boolean") setters.setSidebarCollapsed(preferences.layout.sidebarCollapsed);
   if (typeof preferences.layout?.serverPanelHeight === "number") setters.setServerPanelHeight(preferences.layout.serverPanelHeight);
   if (typeof preferences.layout?.messagePaneHeight === "number") setters.setMessagePaneHeight(preferences.layout.messagePaneHeight);
   if (typeof preferences.appearance?.fontFamily === "string") setters.setFontFamily(preferences.appearance.fontFamily);
   if (typeof preferences.appearance?.fontSize === "number") setters.setFontSize(preferences.appearance.fontSize);
   if (typeof preferences.appearance?.fontWeight === "number") setters.setFontWeight(preferences.appearance.fontWeight);
+  const language = preferences.appearance?.language;
+  if (language === "auto" || language === "ko" || language === "en") setters.setLanguage(language);
   if (typeof preferences.exportFormatTemplate === "string") setters.setExportFormatTemplate(preferences.exportFormatTemplate);
   setters.setKeyboardShortcuts(preferences.keyboardShortcuts ?? {});
   if (typeof preferences.diagnostics?.logRetentionDays === "number") setters.setLogRetentionDays(preferences.diagnostics.logRetentionDays);

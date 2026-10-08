@@ -24,7 +24,11 @@ empty:headers
 
 ```text
 /timeout|failed/i
+value:/^\d+$/
+value:/^"two words"$/
 ```
+
+Regex literals preserve backslashes, spaces, quotes, and escaped slashes. A field prefix and negation can be combined, for example `!value:/^\d+$/`. Global (`g`) and sticky (`y`) flags are evaluated independently for each field value and record.
 
 ## JSON Path Comparisons
 

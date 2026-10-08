@@ -91,11 +91,20 @@ function splitSearchTokens(query: string) {
   let current = "";
   let quote: '"' | "'" | null = null;
   let escaping = false;
-  for (const char of query) {
+  for (let index = 0; index < query.length; index += 1) {
+    const char = query[index];
     if (escaping) {
       current += char;
       escaping = false;
       continue;
+    }
+    if (!quote && char === "/" && isRegexPrefix(current)) {
+      const end = findRegexEnd(query, index);
+      if (end !== -1) {
+        current += query.slice(index, end + 1);
+        index = end;
+        continue;
+      }
     }
     if (char === "\\") {
       escaping = true;
@@ -120,6 +129,26 @@ function splitSearchTokens(query: string) {
   }
   if (current) tokens.push(current);
   return tokens;
+}
+
+function isRegexPrefix(prefix: string) {
+  const field = prefix.replace(/^[!-]/, "");
+  return field === "" || (field.endsWith(":") && Object.prototype.hasOwnProperty.call(messageFilterAliases, field.slice(0, -1).toLowerCase()));
+}
+
+function findRegexEnd(query: string, start: number) {
+  let inCharacterClass = false;
+  for (let index = start + 1; index < query.length; index += 1) {
+    const char = query[index];
+    if (char === "\\") { index += 1; continue; }
+    if (char === "[") inCharacterClass = true;
+    if (char === "]") inCharacterClass = false;
+    if (char !== "/" || inCharacterClass) continue;
+    let end = index + 1;
+    while (end < query.length && /[a-z]/i.test(query[end])) end += 1;
+    if (end === query.length || /\s/.test(query[end])) return end - 1;
+  }
+  return -1;
 }
 
 function parseMessageFilterToken(token: string): MessageTextSearchTerm | null {
@@ -195,7 +224,11 @@ function matchMessageSearchTerm(message: ConsumedMessage, term: MessageSearchTer
   if (term.field === "empty") return matchEmptyMessageField(message, term.value);
   if (term.field === "has") return !matchEmptyMessageField(message, term.value);
   const values = getMessageSearchValues(message, term.field, selectedField);
-  if (term.regex) return values.some((value) => term.regex?.test(value));
+  const regex = term.regex;
+  if (regex) return values.some((value) => {
+    regex.lastIndex = 0;
+    return regex.test(value);
+  });
   return values.some((value) => value.toLowerCase().includes(term.value));
 }
 

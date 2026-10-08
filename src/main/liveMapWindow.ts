@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
 import type { LiveMapPoint } from "../shared/types.js";
+import { retainRecentMapValue } from "../shared/liveMapRetention.js";
 import { writeAppLog } from "./logger.js";
 import { appIconPath } from "./storage.js";
 
@@ -9,7 +10,7 @@ const bufferedPoints = new Map<string, LiveMapPoint>();
 
 function storeLiveMapPoints(points: LiveMapPoint[]) {
   for (const point of points) {
-    bufferedPoints.set(point.id, point);
+    retainRecentMapValue(bufferedPoints, point.id || `${point.topic}:${point.partition}:${point.offset}`, point);
   }
 }
 

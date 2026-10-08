@@ -9,7 +9,7 @@ type KafkaConsumeEventsParams = {
   selectedServerId: string;
   consumeDefaultsByServer: Record<string, Partial<TopicConsumeState>>;
   getDefaultConsumeState: (serverId?: string, topic?: string) => TopicConsumeState;
-  getMessageTarget: (serverId: string, topic: string, consumerId?: WorkspacePaneId) => WorkspacePaneId;
+  getMessageTarget: (serverId: string, topic: string, consumerId?: string) => WorkspacePaneId | undefined;
   mergeConsumeState: (
     states: ConsumeStatesByServer,
     serverId: string,
@@ -39,8 +39,8 @@ export function useKafkaConsumeEvents({
     const offMessage = kafkaApi.onConsumeMessage((message) => {
       const serverId = message.serverId ?? selectedServerId;
       if (!serverId) return;
-      const consumerId = message.consumerId === "split" || message.consumerId === "primary" ? message.consumerId : undefined;
-      const targetPane = getMessageTarget(serverId, message.topic, consumerId);
+      const targetPane = getMessageTarget(serverId, message.topic, message.consumerId);
+      if (!targetPane) return;
       const applyMessage = (current: ConsumeStatesByServer) => {
         const serverStates = current[serverId] ?? {};
         const previous = serverStates[message.topic] ?? getDefaultConsumeState(serverId, message.topic);

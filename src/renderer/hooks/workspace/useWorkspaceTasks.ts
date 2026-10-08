@@ -1,6 +1,7 @@
 ﻿import type { Dispatch, SetStateAction } from "react";
 import type { PaneToastState, ToastState, WorkspaceActionTarget, WorkspacePaneId } from "../../uiTypes";
 import { getConsumeTaskKey } from "../../workspaceState";
+import { useRef } from "react";
 
 type PaneToastScope = {
   serverId?: string;
@@ -22,6 +23,7 @@ export function useWorkspaceTasks({
   setPaneToast,
   setActiveConsumeTaskKeys
 }: WorkspaceTaskParams) {
+  const workspaceTaskRunsRef = useRef(new Map<string, symbol>());
   async function runTask<T>(label: string, task: () => Promise<T>, options: { toast?: boolean } = {}) {
     const showToast = options.toast !== false;
     setLoading(true);
@@ -68,15 +70,18 @@ export function useWorkspaceTasks({
     }
   }
 
-  async function runWorkspaceTask<T>(target: WorkspaceActionTarget, label: string, task: () => Promise<T>) {
-    const taskKey = target.topic ? getConsumeTaskKey(target.pane, target.serverId, target.topic) : null;
+  async function runWorkspaceTask<T>(target: WorkspaceActionTarget, label: string, task: () => Promise<T>, options: { trackConsumeTask?: boolean } = {}) {
+    const taskKey = target.topic && options.trackConsumeTask !== false ? getConsumeTaskKey(target.pane, target.serverId, target.topic) : null;
+    const runId = Symbol();
     if (taskKey) {
+      workspaceTaskRunsRef.current.set(taskKey, runId);
       setActiveConsumeTaskKeys((current) => current.includes(taskKey) ? current : [...current, taskKey]);
     }
     try {
       return await runPaneTask(target.pane, label, task, { serverId: target.serverId, topic: target.topic });
     } finally {
-      if (taskKey) {
+      if (taskKey && workspaceTaskRunsRef.current.get(taskKey) === runId) {
+        workspaceTaskRunsRef.current.delete(taskKey);
         setActiveConsumeTaskKeys((current) => current.filter((key) => key !== taskKey));
       }
     }

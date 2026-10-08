@@ -1,6 +1,8 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { LiveMapPoint } from "../shared/types";
+import { retainRecentMapValue } from "../shared/liveMapRetention";
+import { onUserMapNavigation } from "./mapNavigation";
 import {
   defaultMapOutlierSettings,
   detectMapOutliers,
@@ -621,6 +623,7 @@ function animateMarker(vehicle: VehicleState, nextPoint: LiveMapPoint) {
 function upsertVehicle(point: LiveMapPoint) {
   const existing = vehicles.get(point.id);
   if (existing) {
+    retainRecentMapValue(vehicles, point.id, existing);
     animateMarker(existing, point);
     return existing;
   }
@@ -644,8 +647,22 @@ function upsertVehicle(point: LiveMapPoint) {
   pushAlertEvent(point, alerts);
   vehicle.lastHeading = getPointHeading(point);
   vehicle.lastPointAt = Date.now();
-  vehicles.set(point.id, vehicle);
+  const evicted = retainRecentMapValue(vehicles, point.id, vehicle);
+  if (evicted) {
+    removeVehicleLayers(evicted[1]);
+    if (selectedId === evicted[0]) {
+      selectedId = "";
+      closePopup();
+    }
+  }
   return vehicle;
+}
+
+function removeVehicleLayers(vehicle: VehicleState) {
+  if (vehicle.animation) cancelAnimationFrame(vehicle.animation);
+  vehicle.marker.remove();
+  vehicle.polyline.remove();
+  for (const segment of vehicle.alertSegments) segment.remove();
 }
 
 function renderVehicleList() {
@@ -788,7 +805,7 @@ function addPoints(nextPoints: LiveMapPoint[]) {
     if (!selectedId) selectedId = nextPoint.id;
   }
 
-  if (focusedPoint) {
+  if (focusedPoint && vehicles.has(focusedPoint.id)) {
     selectedId = focusedPoint.id;
     setTrackingMode("selected");
     showPopup(focusedPoint);
@@ -822,10 +839,7 @@ trailButton.addEventListener("click", () => {
 
 clearButton.addEventListener("click", () => {
   for (const vehicle of vehicles.values()) {
-    if (vehicle.animation) cancelAnimationFrame(vehicle.animation);
-    vehicle.marker.remove();
-    vehicle.polyline.remove();
-    for (const segment of vehicle.alertSegments) segment.remove();
+    removeVehicleLayers(vehicle);
   }
   vehicles.clear();
   alertEvents.length = 0;
@@ -887,7 +901,7 @@ resetOutlierSettingsButton.addEventListener("click", resetOutlierSettings);
   input.addEventListener("input", updateOutlierSettings);
 });
 
-map.on("dragstart zoomstart", () => {
+onUserMapNavigation(map, () => {
   setTrackingMode("free");
   refreshView();
 });

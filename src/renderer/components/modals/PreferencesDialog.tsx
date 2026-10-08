@@ -5,7 +5,7 @@ import type { ManualAvroSchemaRow } from "../../hooks/preferences/useManualAvroS
 import type { PreferenceGroup, PreferencePage, PreferenceSearchMatches } from "../../hooks/preferences/usePreferenceNavigation";
 import { t, type AppLanguage, type LanguagePreference } from "../../i18n";
 import type { KeyboardShortcutMap } from "../../keyboardShortcuts";
-import { DEFAULT_EXPORT_FORMAT_TEMPLATE, DEFAULT_FONT_FAMILY } from "../../stores/ui/layoutStore";
+import { DEFAULT_FONT_FAMILY } from "../../stores/ui/layoutStore";
 import { AvroSchemasPreferences } from "./preferences/AvroSchemasPreferences";
 import { DiagnosticsPreferences } from "./preferences/DiagnosticsPreferences";
 import { EditorFontPreferences } from "./preferences/EditorFontPreferences";
@@ -178,7 +178,7 @@ export function PreferencesDialog({
             <button className="ghost" onClick={() => {
               onFontFamily(DEFAULT_FONT_FAMILY);
               onFontSize(13);
-              onExportFormatTemplate(DEFAULT_EXPORT_FORMAT_TEMPLATE);
+              onFontWeight(600);
             }}>
               {t(uiLanguage, "action.reset")}
             </button>

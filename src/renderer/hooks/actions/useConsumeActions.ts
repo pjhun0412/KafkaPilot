@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useEffect, useRef, type Dispatch, type MutableRefObject, type SetStateAction } from "react";
 import type { KafkaApi } from "../../../shared/types";
 import type { TopicConsumeState, WorkspaceActionTarget, WorkspacePaneId } from "../../uiTypes";
 import { buildOffsetPagination, getOffsetPageLimit } from "../../consumeConfig";
@@ -21,14 +21,16 @@ type ConsumeActionsParams = {
   selectedTopic: string;
   consumeStates: ConsumeStatesByTopic;
   selectedDefaultConsumeState: TopicConsumeState;
-  runWorkspaceTask: <T>(target: WorkspaceActionTarget, label: string, task: () => Promise<T>) => Promise<T>;
+  runWorkspaceTask: <T>(target: WorkspaceActionTarget, label: string, task: () => Promise<T>, options?: { trackConsumeTask?: boolean }) => Promise<T>;
+  pendingLiveTasksRef: MutableRefObject<Map<string, string>>;
   updateConsumeStateFor: (serverId: string, topic: string, patch: Partial<TopicConsumeState>, pane?: WorkspacePaneId) => void;
   setActiveConsumeTaskKeys: Dispatch<SetStateAction<string[]>>;
   setStreamingTopicsByServer: Dispatch<SetStateAction<StreamingTopicsByServer>>;
-  setStartedConsumer: (serverId: string, topic: string, pane: WorkspacePaneId) => void;
-  getStopConsumerId: (serverId: string, topic: string, pane?: WorkspacePaneId) => WorkspacePaneId | undefined;
+  setStartedConsumer: (serverId: string, topic: string, pane: WorkspacePaneId, consumerId: string) => void;
+  getStopConsumerId: (serverId: string, topic: string, pane?: WorkspacePaneId) => string | undefined;
+  getMessageTarget: (serverId: string, topic: string, consumerId?: string) => WorkspacePaneId | undefined;
   clearStoppedConsumer: (serverId: string, topic: string, pane: WorkspacePaneId) => void;
-  clearMessageTarget: (serverId: string, topic: string, consumerId?: WorkspacePaneId) => void;
+  clearMessageTarget: (serverId: string, topic: string, consumerId?: string) => void;
   setStatus: (status: string) => void;
 };
 
@@ -39,15 +41,33 @@ export function useConsumeActions({
   consumeStates,
   selectedDefaultConsumeState,
   runWorkspaceTask,
+  pendingLiveTasksRef,
   updateConsumeStateFor,
   setActiveConsumeTaskKeys,
   setStreamingTopicsByServer,
   setStartedConsumer,
   getStopConsumerId,
+  getMessageTarget,
   clearStoppedConsumer,
   clearMessageTarget,
   setStatus
 }: ConsumeActionsParams) {
+  const liveSessionsRef = useRef(new Map<string, { serverId: string; topic: string }>());
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      for (const [consumerId, target] of liveSessionsRef.current) {
+        const pane = getMessageTarget(target.serverId, target.topic, consumerId);
+        if (pane) clearStoppedConsumer(target.serverId, target.topic, pane);
+        void kafkaApi?.stopConsume({ ...target, consumerId }).catch(() => undefined);
+      }
+      liveSessionsRef.current.clear();
+    };
+  }, [kafkaApi]);
+
   async function startConsume() {
     if (!kafkaApi || !selectedServerId || !selectedTopic) return;
     const state = consumeStates[selectedTopic] ?? selectedDefaultConsumeState;
@@ -146,7 +166,9 @@ export function useConsumeActions({
 
   async function startConsumeFor(serverId: string, topic: string, state: TopicConsumeState, pane: WorkspacePaneId = "primary") {
     if (!kafkaApi || !serverId || !topic) return;
+    if (state.mode !== "offset" && state.mode !== "timeRange" && getStopConsumerId(serverId, topic, pane)) return;
     const taskKey = getConsumeTaskKey(pane, serverId, topic);
+    let liveConsumerId: string | undefined;
     setActiveConsumeTaskKeys((current) => current.includes(taskKey) ? current : [...current, taskKey]);
     const partition = getRequiredPartition(state);
     try {
@@ -175,42 +197,88 @@ export function useConsumeActions({
         updateConsumeStateFor(serverId, topic, { messages: orderedItems, selectedMessage: orderedItems[0] ?? null, offsetPagination: null }, pane);
         return;
       }
+      const consumerId = crypto.randomUUID();
+      liveConsumerId = consumerId;
+      pendingLiveTasksRef.current.set(taskKey, consumerId);
+      liveSessionsRef.current.set(consumerId, { serverId, topic });
+      // Track connection attempts too: closing or moving a tab must affect a pending start.
+      setStartedConsumer(serverId, topic, pane, consumerId);
+      setStreamingTopicsByServer((current) => addStreamingTopic(current, serverId, topic, pane));
       const result = await runWorkspaceTask({ pane, serverId, topic }, "Starting live consume...", () =>
         kafkaApi.startConsume({
           serverId,
           topic,
-          consumerId: pane,
+          consumerId,
           fromBeginning: false,
           partition: getOptionalPartition(state),
           record: state.liveRecordEnabled
-        })
+        }), { trackConsumeTask: false }
       );
-      setStartedConsumer(serverId, topic, pane);
+      const targetPane = getMessageTarget(serverId, topic, consumerId);
+      if (!mountedRef.current || !targetPane) {
+        await kafkaApi.stopConsume({ serverId, topic, consumerId });
+        liveSessionsRef.current.delete(consumerId);
+        return;
+      }
       updateConsumeStateFor(serverId, topic, {
         offsetPagination: null,
         liveRecordPath: result.liveRecordPath ?? "",
         liveRecordCount: 0
-      }, pane);
-      setStreamingTopicsByServer((current) => addStreamingTopic(current, serverId, topic, pane));
+      }, targetPane);
       setStatus(workspaceMessages.consumeReset);
+    } catch (error) {
+      if (liveConsumerId) {
+        const targetPane = getMessageTarget(serverId, topic, liveConsumerId);
+        if (targetPane) {
+          clearStoppedConsumer(serverId, topic, targetPane);
+          setStreamingTopicsByServer((current) => removeStreamingTopic(current, serverId, topic, targetPane, () => undefined));
+        }
+        liveSessionsRef.current.delete(liveConsumerId);
+      }
+      throw error;
     } finally {
-      setActiveConsumeTaskKeys((current) => current.filter((key) => key !== taskKey));
+      if (!liveConsumerId) {
+        setActiveConsumeTaskKeys((current) => current.filter((key) => key !== taskKey));
+      } else {
+        // Pane moves change task ownership while the start promise is pending.
+        for (const [pendingKey, pendingId] of pendingLiveTasksRef.current) {
+          if (pendingId !== liveConsumerId) continue;
+          pendingLiveTasksRef.current.delete(pendingKey);
+          setActiveConsumeTaskKeys((current) => current.filter((key) => key !== pendingKey));
+        }
+      }
     }
   }
 
   async function stopConsume(serverId = selectedServerId, topic = selectedTopic, pane?: WorkspacePaneId) {
     if (!kafkaApi) return;
     const consumerId = getStopConsumerId(serverId, topic, pane);
-    const targetPane = pane ?? consumerId ?? "primary";
-    await runWorkspaceTask({ pane: targetPane, serverId, topic }, "Stopping live consume...", () =>
-      kafkaApi.stopConsume({ serverId, topic, consumerId })
-    );
-    setStreamingTopicsByServer((current) =>
-      removeStreamingTopic(current, serverId, topic, pane, (removedTopic, removedPane) => {
-        clearStoppedConsumer(serverId, removedTopic, removedPane);
-      })
-    );
-    clearMessageTarget(serverId, topic, consumerId);
+    if (pane && !consumerId) return;
+    const targetPane = pane ?? "primary";
+    // Invalidate before awaiting IPC, so an older start/stop cannot alter a restarted session.
+    const panes: WorkspacePaneId[] = pane ? [pane] : ["primary", "split"];
+    for (const stoppedPane of panes) {
+      const stoppedId = getStopConsumerId(serverId, topic, stoppedPane);
+      if (stoppedId) liveSessionsRef.current.delete(stoppedId);
+      clearStoppedConsumer(serverId, topic, stoppedPane);
+      pendingLiveTasksRef.current.delete(getConsumeTaskKey(stoppedPane, serverId, topic));
+    }
+    setActiveConsumeTaskKeys((current) => current.filter((key) => !panes.some((stoppedPane) => key === getConsumeTaskKey(stoppedPane, serverId, topic))));
+    setStreamingTopicsByServer((current) => removeStreamingTopic(current, serverId, topic, pane, () => undefined));
+    const stopTaskKey = getConsumeTaskKey(targetPane, serverId, topic);
+    const stopTaskId = crypto.randomUUID();
+    pendingLiveTasksRef.current.set(stopTaskKey, stopTaskId);
+    setActiveConsumeTaskKeys((current) => current.includes(stopTaskKey) ? current : [...current, stopTaskKey]);
+    try {
+      await runWorkspaceTask({ pane: targetPane, serverId, topic }, "Stopping live consume...", () =>
+        kafkaApi.stopConsume({ serverId, topic, consumerId }), { trackConsumeTask: false }
+      );
+    } finally {
+      if (pendingLiveTasksRef.current.get(stopTaskKey) === stopTaskId) {
+        pendingLiveTasksRef.current.delete(stopTaskKey);
+        setActiveConsumeTaskKeys((current) => current.filter((key) => key !== stopTaskKey));
+      }
+    }
   }
 
   return {
