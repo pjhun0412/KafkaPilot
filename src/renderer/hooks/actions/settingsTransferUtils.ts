@@ -16,6 +16,7 @@ import type { ViewerPreferences } from "../../viewerPreferences";
 import { pruneViewerPreferences } from "../../viewerPreferences";
 
 export type ImportedPreferenceSetters = {
+  setServerGroups: (groups: AppPreferences["serverGroups"]) => void;
   setFavoriteTopicsByServer: Dispatch<SetStateAction<Record<string, string[]>>>;
   setConsumeDefaults: Dispatch<SetStateAction<NonNullable<AppPreferences["consumeDefaults"]>>>;
   setViewerPreferences: Dispatch<SetStateAction<Required<ViewerPreferences>>>;
@@ -60,6 +61,7 @@ export type WorkspaceResetSetters = {
 };
 
 export function applyImportedPreferences(preferences: AppPreferences, setters: ImportedPreferenceSetters) {
+  setters.setServerGroups(preferences.serverGroups);
   setters.setFavoriteTopicsByServer(preferences.favoriteTopicsByServer ?? {});
   setters.setConsumeDefaults(preferences.consumeDefaults ?? {});
   setters.setViewerPreferences(pruneViewerPreferences(preferences.viewerPreferences));

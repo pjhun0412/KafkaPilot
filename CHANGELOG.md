@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+### Added
+
+- Add single-level server groups with rename, collapse, drag-and-drop moves, group/member ordering, and a context-menu move selector.
+- Persist server groups in preferences and settings export/import; deleting a group keeps its servers in the main list.
+
+### Changed
+
+- Reduce sidebar server rows from 38px to 28px and tighten search spacing.
+- Place server and group creation icons together in the SERVER header, with localized tooltips and server creation emphasized.
+- Show servers without a group directly in the list without an extra heading; drop onto empty list space to move a server out of its group.
+- Include group names and collapsed group members in server search results.
+- Position server context menus using their actual dimensions to keep the added group controls inside the window.
+
+### Fixed
+
+- Keep the message grid/viewer divider stable in compact windows, adapt both panes to window and toolbar sizes, and preserve the preferred height across window resizing. See the [resize investigation](docs/incidents/2026-10-08-message-viewer-resize.md).
+- Clean up pending divider updates and pointer capture when dragging is cancelled or the pane closes.
+
 ## 2.0.8
 
 ### Added

@@ -1,5 +1,4 @@
 ﻿import type React from "react";
-import { Plus } from "lucide-react";
 import type { ServerProfile, TopicSummary } from "../../../../shared/types";
 import { useAppLanguage } from "../../../hooks/state/useAppLanguage";
 import { t } from "../../../i18n";
@@ -132,9 +131,6 @@ export function WorkspaceSidebar({
           <strong>KafkaPilot</strong>
           <span>{t(language, "label.desktopClient")}</span>
         </div>
-        <button className="icon-button add-server" onClick={onNewServer} title={t(language, "title.addServer")}>
-          <Plus size={17} />
-        </button>
       </div>
 
       <ServerPanel
@@ -147,6 +143,7 @@ export function WorkspaceSidebar({
         serverDropTarget={serverDropTarget}
         connectedServerIds={connectedServerIds}
         failedServerIds={failedServerIds}
+        onNewServer={onNewServer}
         onQuery={onServerQuery}
         onDragStart={(event, serverId) => {
           onServerDragStart(serverId);

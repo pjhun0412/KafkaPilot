@@ -17,6 +17,7 @@ import { useProduceDraftZustandStore } from "../../stores/domain/produceDraftSto
 import { useServerClusterStore } from "../../stores/domain/serverClusterStore";
 import { useTopicResourceStore } from "../../stores/domain/topicResourceStore";
 import { useLayoutStore } from "../../stores/ui/layoutStore";
+import { useServerGroupsStore } from "../../stores/ui/serverGroupsStore";
 import { useSearchStore } from "../../stores/ui/searchStore";
 import { useSettingsTransferDialogStore } from "../../stores/ui/settingsTransferDialogStore";
 import {
@@ -96,6 +97,7 @@ export function useSettingsTransferActions({
 
   function applyImportedSettings(result: ImportSettingsResult) {
     applyImportedPreferences(result.preferences, {
+        setServerGroups: useServerGroupsStore.getState().setGroups,
       setFavoriteTopicsByServer: topicResourceSetters.setFavoriteTopicsByServer,
       setConsumeDefaults: kafkaPreferenceSetters.setConsumeDefaults,
       setViewerPreferences: kafkaPreferenceSetters.setViewerPreferences,

@@ -574,7 +574,6 @@ function ConsumePanelView(props: ConsumePanelProps) {
       <div
         className={props.inspectorCollapsed ? "consume-grid inspector-collapsed" : "consume-grid"}
         ref={consumeGridRef}
-        style={{ gridTemplateRows: props.inspectorCollapsed ? "minmax(0, 1fr) 34px" : `${props.messagePaneHeight}px 8px minmax(0, 1fr)` }}
       >
         <div ref={messageTableRef} className="consume-grid-table-wrap">
           {isGridReady ? (

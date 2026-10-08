@@ -277,6 +277,7 @@ src/renderer/stores/
 - `manualAvroSchemaStore`: 수동 Avro Schema UI 상태
 - `serverFormStore`: 서버 등록/수정 Form 상태
 - `sidebarInteractionStore`: Context Menu, Drag/Drop 상태
+- `serverGroupsStore`: 서버 그룹 이름, 멤버 순서, 접힘 상태. `useServerGroups`가 검색 결과와 그룹 편집 상태를 구성하고 `shared/serverGroups.ts`가 설정 정규화와 멤버 이동을 담당한다. `AppPreferences.serverGroups`로 저장·가져오기를 지원한다.
 
 ## 주요 기능
 

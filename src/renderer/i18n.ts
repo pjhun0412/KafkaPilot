@@ -16,6 +16,14 @@ export function resolveLanguage(preference: LanguagePreference): AppLanguage {
 
 const messages = {
   ko: {
+    "serverGroups.add": "서버 그룹 추가",
+    "serverGroups.rename": "그룹 이름 변경",
+    "serverGroups.delete": "그룹 삭제 (서버는 유지)",
+    "serverGroups.name": "그룹 이름",
+    "serverGroups.invalidName": "1~60자의 중복되지 않는 그룹 이름을 입력하세요.",
+    "serverGroups.ungrouped": "그룹 없음",
+    "serverGroups.dropHere": "서버를 여기로 끌어 놓으세요",
+    "serverGroups.moveTo": "그룹으로 이동",
     "settings.language.auto": "자동",
     "settings.language.ko": "한국어",
     "settings.language.en": "English",
@@ -555,6 +563,14 @@ const messages = {
     "workspace.clusterTabs.empty": "왼쪽 서버를 연결하거나 더블 클릭하면 클러스터 탭으로 열립니다."
   },
   en: {
+    "serverGroups.add": "Add server group",
+    "serverGroups.rename": "Rename group",
+    "serverGroups.delete": "Delete group (keep servers)",
+    "serverGroups.name": "Group name",
+    "serverGroups.invalidName": "Enter a unique group name between 1 and 60 characters.",
+    "serverGroups.ungrouped": "No group",
+    "serverGroups.dropHere": "Drag servers here",
+    "serverGroups.moveTo": "Move to group",
     "settings.language.auto": "Auto",
     "settings.language.ko": "Korean",
     "settings.language.en": "English",

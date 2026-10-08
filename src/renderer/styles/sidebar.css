@@ -62,17 +62,13 @@ small {
   @apply grid shrink-0 grid-cols-[0.9fr_1.35fr] border-b border-[#2b2b2b] bg-[#2d2d2d] px-3 py-2 text-[11px] font-extrabold uppercase text-slate-300;
 }
 
-.server-panel .sidebar-panel-title span:nth-child(2) {
-  @apply overflow-hidden whitespace-nowrap text-transparent;
-}
-
-.server-panel .sidebar-panel-title span:nth-child(2)::before {
-  content: "Server";
-  @apply text-slate-300;
-}
-
 .server-list {
-  @apply grid min-h-0 content-start gap-1 overflow-auto p-1;
+  @apply grid min-h-0 flex-1 content-start overflow-auto p-1;
+}
+
+.server-list.drop-root {
+  outline: 1px solid #3794ff;
+  outline-offset: -1px;
 }
 
 .search-box {
@@ -92,11 +88,15 @@ small {
 }
 
 .server-search {
-  @apply mx-2 mt-2 w-[calc(100%-1rem)];
+  @apply mx-1.5 my-1 w-[calc(100%-0.75rem)];
+}
+
+.server-search input {
+  @apply h-7 text-[11px];
 }
 
 .server {
-  @apply relative grid min-h-[38px] w-full grid-cols-[0.9fr_1.35fr] items-center rounded border border-transparent px-2 py-1.5 text-left text-inherit transition hover:border-transparent hover:bg-[#2a2d2e];
+  @apply relative grid min-h-[28px] w-full grid-cols-[1.2fr_1fr] items-center gap-2 rounded border border-transparent px-1.5 py-0.5 text-left text-inherit transition hover:border-transparent hover:bg-[#2a2d2e];
 }
 
 .server.active {
@@ -126,7 +126,7 @@ small {
 }
 
 .server-name {
-  @apply flex items-center gap-2;
+  @apply flex items-center gap-1.5;
 }
 
 .connection-dot {
@@ -156,6 +156,130 @@ small {
 
 .server-host small {
   @apply text-[11px] text-slate-400;
+}
+
+.server-panel-heading {
+  @apply flex min-h-8 flex-wrap items-center justify-between gap-x-2 gap-y-1 px-2 py-1;
+}
+
+.server-panel-actions {
+  @apply ml-auto flex shrink-0 items-center gap-1 normal-case;
+}
+
+.server-panel-action {
+  @apply inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-slate-300 hover:bg-white/10 hover:text-white;
+}
+
+.server-panel-action svg {
+  @apply shrink-0;
+}
+
+.server-panel-add-server {
+  @apply bg-[#264f78] text-[#c8e8ff] hover:bg-[#315f8b];
+}
+
+.server-group {
+  @apply min-w-0;
+}
+
+.server-group-heading {
+  @apply flex min-h-[28px] min-w-0 items-center gap-0.5 border-y border-transparent px-1 text-[11px] text-slate-400;
+}
+
+.server-group-heading.contains-selected {
+  @apply text-slate-100;
+}
+
+.server-group-heading.drop-group {
+  @apply border-[#3794ff] bg-[#264f78] text-white;
+}
+
+.server-group.dragging-group {
+  @apply opacity-50;
+}
+
+.server-group-heading.group-drop-before {
+  border-top-color: #3794ff;
+}
+
+.server-group-heading.group-drop-after {
+  border-bottom-color: #3794ff;
+}
+
+.server-group-toggle {
+  @apply flex min-w-0 flex-1 items-center gap-1 bg-transparent py-1 text-left text-inherit;
+}
+
+.server-group-toggle svg,
+.server-group-toggle small {
+  @apply shrink-0;
+}
+
+.server-group-toggle strong {
+  @apply min-w-0 flex-1 truncate font-semibold;
+}
+
+.server-group-heading small {
+  @apply text-[10px] tabular-nums text-slate-500;
+}
+
+.server-group-action {
+  @apply grid h-6 w-6 shrink-0 place-items-center rounded-sm bg-transparent text-slate-400 hover:bg-white/10 hover:text-slate-100;
+}
+
+.server-group-heading > .server-group-action {
+  @apply opacity-0;
+}
+
+.server-group-heading:hover > .server-group-action,
+.server-group-heading:focus-within > .server-group-action {
+  @apply opacity-100;
+}
+
+.server-panel-action:focus-visible,
+.server-group-action:focus-visible,
+.server-group-toggle:focus-visible,
+.server:focus-visible {
+  outline: 1px solid #3794ff;
+  outline-offset: -1px;
+}
+
+.grouped-server {
+  @apply pl-5;
+}
+
+.server-group-empty {
+  @apply px-5 py-1 text-[10px] text-slate-500;
+}
+
+.server-group-editor {
+  @apply mx-1.5 mb-1 grid shrink-0 grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-0.5;
+}
+
+.server-group-editor-label {
+  @apply col-span-3 text-[11px] text-slate-400;
+}
+
+.server-group-editor input {
+  @apply h-7 min-w-0 px-1.5 text-[11px];
+}
+
+.server-group-editor small {
+  @apply col-span-3 text-[10px] text-red-400;
+}
+
+.server-group-menu {
+  @apply grid gap-1 border-t border-white/10 px-2.5 py-2 text-[11px] text-slate-400;
+}
+
+.server-group-menu select {
+  @apply h-7 max-w-[220px] text-[12px];
+}
+
+.context-menu.server-context-menu {
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
+  overflow: auto;
 }
 
 .context-menu {
@@ -199,10 +323,6 @@ small {
 
 .brand svg {
   @apply bg-[#264f78] text-[#9cdcfe] ring-[#3794ff]/25;
-}
-
-.icon-button.add-server {
-  @apply bg-[#2d2d2d] text-[#9cdcfe] ring-[#3c3c3c] hover:bg-[#333333] hover:ring-[#3794ff];
 }
 
 .context-menu .danger-item {

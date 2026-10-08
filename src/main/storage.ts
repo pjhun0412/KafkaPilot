@@ -4,6 +4,7 @@ import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { writeAppLog } from "./logger.js";
 import type { AppPreferences, ServerProfile } from "../shared/types.js";
+import { normalizeServerGroups } from "../shared/serverGroups.js";
 
 type StoredServerProfile = Omit<ServerProfile, "schemaRegistry" | "security"> & {
   schemaRegistry?: {
@@ -289,6 +290,7 @@ export function stripServerSecrets(profile: ServerProfile): ServerProfile {
 
 export const defaultPreferences: AppPreferences = {
   favoriteTopicsByServer: {},
+  serverGroups: [],
   consumeDefaults: {
     inspectorMode: "raw",
     inspectorCollapsed: false,
@@ -394,6 +396,7 @@ export async function writePreferences(preferences: AppPreferences) {
 export function normalizePreferences(preferences?: Partial<AppPreferences>): AppPreferences {
   return {
     favoriteTopicsByServer: preferences?.favoriteTopicsByServer ?? {},
+    serverGroups: normalizeServerGroups(preferences?.serverGroups),
     consumeDefaults: preferences?.consumeDefaults ?? defaultPreferences.consumeDefaults,
     viewerPreferences: preferences?.viewerPreferences ?? defaultPreferences.viewerPreferences,
     consumeDefaultsByServer: preferences?.consumeDefaultsByServer ?? {},
@@ -415,6 +418,7 @@ export function mergePreferences(current: AppPreferences, next: AppPreferences):
     ...current,
     ...next,
     favoriteTopicsByServer: next.favoriteTopicsByServer ?? current.favoriteTopicsByServer,
+    serverGroups: normalizeServerGroups(next.serverGroups ?? current.serverGroups),
     consumeDefaults: {
       ...(current.consumeDefaults ?? {}),
       ...(next.consumeDefaults ?? {})

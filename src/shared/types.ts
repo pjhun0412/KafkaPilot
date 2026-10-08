@@ -198,8 +198,16 @@ export type ProduceTemplatePreference = {
   updatedAt: number;
 };
 
+export type ServerGroup = {
+  id: string;
+  name: string;
+  serverIds: string[];
+  collapsed: boolean;
+};
+
 export type AppPreferences = {
   favoriteTopicsByServer: Record<string, string[]>;
+  serverGroups?: ServerGroup[];
   consumeDefaults?: Partial<{
     mode: "offset" | "timeRange" | "live";
     limit: number;

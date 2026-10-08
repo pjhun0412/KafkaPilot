@@ -3,6 +3,7 @@ import type { AppPreferences, KafkaApi, ManualAvroSchema, ProduceTemplatePrefere
 import { INTER_FONT_FAMILY, LEGACY_DEFAULT_FONT_FAMILY, LEGACY_INTER_FONT_FAMILY } from "../../fontConfig";
 import { normalizeLanguagePreference, type LanguagePreference } from "../../i18n";
 import { useReleaseNotesStore } from "../../stores/ui/releaseNotesStore";
+import { useServerGroupsStore } from "../../stores/ui/serverGroupsStore";
 import { pruneViewerPreferences, type ViewerPreferences } from "../../viewerPreferences";
 
 type PersistedPreferenceParams = {
@@ -101,6 +102,8 @@ export function usePersistedPreferences({
   setLastSeenReleaseVersion
 }: PersistedPreferenceParams) {
   const openReleaseNotes = useReleaseNotesStore((state) => state.openReleaseNotes);
+  const serverGroups = useServerGroupsStore((state) => state.groups);
+  const setServerGroups = useServerGroupsStore((state) => state.setGroups);
 
   useEffect(() => {
     if (!kafkaApi) {
@@ -109,6 +112,7 @@ export function usePersistedPreferences({
     void Promise.all([kafkaApi.loadPreferences(), kafkaApi.getAppVersion()]).then(([preferences, version]) => {
       setAppVersion(version);
       setFavoriteTopicsByServer(preferences.favoriteTopicsByServer ?? {});
+      setServerGroups(preferences.serverGroups);
       setConsumeDefaults(preferences.consumeDefaults ?? {});
       setViewerPreferences(pruneViewerPreferences(preferences.viewerPreferences));
       setConsumeDefaultsByServer(preferences.consumeDefaultsByServer ?? {});
@@ -160,6 +164,7 @@ export function usePersistedPreferences({
     setConsumeDefaultsByServer,
     setExportFormatTemplate,
     setFavoriteTopicsByServer,
+    setServerGroups,
     setFontFamily,
     setFontSize,
     setFontWeight,
@@ -185,6 +190,7 @@ export function usePersistedPreferences({
     }
     void kafkaApi.savePreferences({
       favoriteTopicsByServer,
+      serverGroups,
       consumeDefaults,
       viewerPreferences: pruneViewerPreferences(viewerPreferences),
       consumeDefaultsByServer,
@@ -215,6 +221,7 @@ export function usePersistedPreferences({
     kafkaApi,
     preferencesLoaded,
     favoriteTopicsByServer,
+    serverGroups,
     consumeDefaults,
     viewerPreferences,
     consumeDefaultsByServer,

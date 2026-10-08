@@ -149,6 +149,10 @@ The reset flow requires three steps: select partitions → run preview (shows ta
 
 Each profile stores broker addresses, optional SSL/TLS, optional SASL/OAUTHBEARER, and optional Schema Registry settings. The **Test** button verifies the Kafka Admin connection before saving.
 
+The sidebar uses compact 28px server rows. The **+** and **folder +** icon buttons are together in the SERVER header; hover to see **Add server** and **Add server group** in the app's current language. Use **Add server group** to create single-level groups such as Production or Development, then click a group name to collapse or expand it. Drag servers onto a group heading or another server to move and reorder them, or use **Move to group** in the server context menu. Search also finds group names and servers inside collapsed groups.
+
+Drag group headings above or below another group heading to change their order. Group rename/delete buttons appear on hover or keyboard focus. Servers without a group appear directly in the list, without a separate heading. Drop a server onto the empty list area or select **No group** in its context menu to move it out of a group. Deleting a group keeps its server profiles and connections in the main list. Group order, membership, member order, and collapsed state persist in app preferences and are included in settings export/import.
+
 ---
 
 ## Keyboard Shortcuts
