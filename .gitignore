@@ -3,3 +3,11 @@ dist/
 out/
 .vite/
 *.log
+
+# Local service connection and development documentation
+/.byulsol/
+/docs/*
+!/docs/map-viewer.gif
+!/docs/replay.png
+!/docs/split-pane.gif
+!/docs/value-columns.gif

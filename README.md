@@ -11,11 +11,11 @@ No server setup. Install, connect, and start working with Kafka in seconds.
 ✅ &nbsp;Safe Consumer Group Offset Reset with preview<br>
 ✅ &nbsp;Built-in Map Viewer for real-time GPS / coordinate payloads
 
-[한국어](README.ko.md) &nbsp;·&nbsp; [Changelog](CHANGELOG.md) &nbsp;·&nbsp; [Docs](docs/)
+[한국어](README.ko.md) &nbsp;·&nbsp; [Changelog](CHANGELOG.md)
 
 ![Version](https://img.shields.io/badge/version-2.0.9-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
 
-[Download Windows x64 2.0.9](https://github.com/pjhun0412/KafkaPilot/releases/download/v2.0.9/KafkaPilot-Setup-2.0.9.exe) &nbsp;·&nbsp; [Release notes](docs/releases/2.0.9.md)
+[Download Windows x64 2.0.9](https://github.com/pjhun0412/KafkaPilot/releases/download/v2.0.9/KafkaPilot-Setup-2.0.9.exe) &nbsp;·&nbsp; [Release notes](https://github.com/pjhun0412/KafkaPilot/releases/tag/v2.0.9)
 
 The Windows installer is unsigned. This release does not include a macOS installer.
 
@@ -178,7 +178,7 @@ All shortcuts can be rebound in `Preferences > Editor > Shortcuts`.
 
 ## Build
 
-Topic and broker configuration updates require Kafka 2.3 or later with IncrementalAlterConfigs v0 support. They change only the supplied settings; unsupported brokers report an error. KafkaJS is pinned to 2.2.4 because the incremental update adapter uses its authenticated internal transport. Revalidate that adapter before upgrading KafkaJS. See the [audit fixes](docs/incidents/2026-10-08-audit-fixes.md).
+Topic and broker configuration updates require Kafka 2.3 or later with IncrementalAlterConfigs v0 support. They change only the supplied settings; unsupported brokers report an error. KafkaJS is pinned to 2.2.4 because the incremental update adapter uses its authenticated internal transport. Revalidate that adapter before upgrading KafkaJS.
 
 **Windows**
 
@@ -206,11 +206,7 @@ npm run package:mac
 ## Documentation
 
 - [Changelog](CHANGELOG.md)
-- [Release guide](docs/release.md)
-- [macOS internal install](docs/macos-install.md)
-- [Consume filters](docs/consume-filters.md)
-- [Avro](docs/avro.md)
-- [Enhancement roadmap](docs/enhancement-roadmap.md)
+- [GitHub releases](https://github.com/pjhun0412/KafkaPilot/releases)
 - [Project structure](PROJECT_STRUCTURE.md)
 
 ---

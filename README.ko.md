@@ -11,11 +11,11 @@
 ✅ &nbsp;미리보기가 있는 안전한 Consumer Group Offset Reset<br>
 ✅ &nbsp;실시간 GPS / 좌표 데이터를 위한 내장 Map Viewer
 
-[English](README.md) &nbsp;·&nbsp; [변경 이력](CHANGELOG.md) &nbsp;·&nbsp; [문서](docs/)
+[English](README.md) &nbsp;·&nbsp; [변경 이력](CHANGELOG.md)
 
 ![Version](https://img.shields.io/badge/version-2.0.9-3b82f6?style=flat-square) &nbsp;![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-64748b?style=flat-square) &nbsp;![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square) &nbsp;![Electron](https://img.shields.io/badge/Electron-33-47848F?style=flat-square)
 
-[Windows x64 2.0.9 다운로드](https://github.com/pjhun0412/KafkaPilot/releases/download/v2.0.9/KafkaPilot-Setup-2.0.9.exe) &nbsp;·&nbsp; [릴리스 노트](docs/releases/2.0.9.md)
+[Windows x64 2.0.9 다운로드](https://github.com/pjhun0412/KafkaPilot/releases/download/v2.0.9/KafkaPilot-Setup-2.0.9.exe) &nbsp;·&nbsp; [릴리스 노트](https://github.com/pjhun0412/KafkaPilot/releases/tag/v2.0.9)
 
 Windows 설치 파일은 코드 서명되지 않았습니다. 이번 릴리스에는 macOS 설치 파일을 포함하지 않습니다.
 
@@ -178,7 +178,7 @@ Group 상세 화면에서 토픽·Partition별 committed offset, beginning/end o
 
 ## 빌드
 
-토픽·브로커 설정 변경은 IncrementalAlterConfigs v0를 지원하는 Kafka 2.3 이상이 필요합니다. 요청한 설정만 변경하며 미지원 브로커에서는 오류를 표시합니다. 증분 변경 어댑터가 KafkaJS 내부 인증 전송 기능을 사용하므로 KafkaJS를 2.2.4로 고정했습니다. KafkaJS를 업그레이드할 때 해당 어댑터를 재검증해야 합니다. 자세한 내용은 [감사 후속 수정 기록](docs/incidents/2026-10-08-audit-fixes.md)을 참고하세요.
+토픽·브로커 설정 변경은 IncrementalAlterConfigs v0를 지원하는 Kafka 2.3 이상이 필요합니다. 요청한 설정만 변경하며 미지원 브로커에서는 오류를 표시합니다. 증분 변경 어댑터가 KafkaJS 내부 인증 전송 기능을 사용하므로 KafkaJS를 2.2.4로 고정했습니다. KafkaJS를 업그레이드할 때 해당 어댑터를 재검증해야 합니다.
 
 **Windows**
 
@@ -206,11 +206,7 @@ npm run package:mac
 ## 문서
 
 - [변경 이력](CHANGELOG.md)
-- [릴리즈 가이드](docs/release.md)
-- [macOS 사내 설치](docs/macos-install.md)
-- [Consume 필터](docs/consume-filters.md)
-- [Avro](docs/avro.md)
-- [고도화 로드맵](docs/enhancement-roadmap.md)
+- [GitHub 릴리스](https://github.com/pjhun0412/KafkaPilot/releases)
 - [프로젝트 구조](PROJECT_STRUCTURE.md)
 
 ---

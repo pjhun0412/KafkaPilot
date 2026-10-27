@@ -127,6 +127,8 @@ For `MessageInspector.tsx`, split new work into focused pieces where possible:
 
 ## Documentation
 
+Development documents in `docs/` and service connection files in `.byulsol/` are local-only. Keep them on disk, but do not add them to Git or bypass `.gitignore` with force-add. Only the four README images explicitly allowlisted in `.gitignore` are tracked under `docs/`. References to development documents below apply when those local files are available; they are not included in a fresh clone. Keep public README links pointed at tracked files or GitHub Releases.
+
 When behavior changes, update the closest user/developer document:
 
 - `README.md` and `README.ko.md` for user-visible product capabilities;

@@ -28,7 +28,7 @@ KafkaPilot은 Electron, React, TypeScript, KafkaJS 기반의 Apache Kafka 데스
 kafka-tool/
 ├─ build/                  아이콘 및 빌드 리소스
 ├─ dist/                   Vite/Electron 빌드 결과
-├─ docs/                   기능별 문서
+├─ docs/                   로컬 개발 문서 및 공개 README 이미지
 ├─ out/                    electron-builder 패키지 결과
 ├─ scripts/                실행/배포 보조 스크립트
 ├─ src/
@@ -313,7 +313,9 @@ src/renderer/stores/
 - `docs/enhancement-roadmap.md`: 구현 상태와 향후 고도화 후보
 - `docs/release.md`: 릴리즈 절차
 - `docs/macos-install.md`: macOS 사내 설치 안내
-- [문서·소스 분석 및 수정 기록](docs/codebase-analysis-2026-09-06.md)
+- `docs/codebase-analysis-2026-09-06.md`: 로컬 문서·소스 분석 및 수정 기록
+
+`docs/`의 개발 문서는 로컬에만 보관하며 Git에는 README에서 사용하는 이미지 4개만 포함합니다. `.byulsol/` 연결 정보도 로컬 전용입니다. 새로 clone한 저장소에는 위 로컬 문서가 없을 수 있습니다.
 
 ## 검증 명령
 
